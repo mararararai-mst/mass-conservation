@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>質量保存の法則 れんしゅう問題｜中2理科</title>
-<meta property="og:title" content="質量保存の法則 れんしゅう問題">
+<title>質量保存の法則 練習問題｜中2理科</title>
+<meta property="og:title" content="質量保存の法則 練習問題">
 <meta property="og:description" content="中2「化学変化と物質の質量」の選択式演習14問。画面ではタップで即採点、印刷するとそのままA4プリントになる。">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -212,7 +212,7 @@ body.show-answers .expl { display: block; }
     color: #000; font-size: 10.5pt; font-weight: 800;
   }
   .qcard .qnum::after { content: '.'; }
-  .qcard .qtext { font-size: 10.5pt; color: #000; padding-top: 0; line-height: 1.55; padding-right: 26mm; }
+  .qcard .qtext { font-size: 10.5pt; color: #000; padding-top: 0; line-height: 1.55; padding-right: 29mm; }
   .qcard .qtext b { color: #000; }
 
   /* 選択肢: 横並びインライン */
@@ -231,13 +231,14 @@ body.show-answers .expl { display: block; }
   .choice.dim { opacity: 1; }
   .verdict-line { display: none !important; }
 
-  /* 解答欄: 問題行の右端に重ねて縦スペースを使わない */
+  /* 解答欄: 問題行の右端に重ねて縦スペースを使わない（右端に張り付けると
+     プリンタの余白で切れるため、右に少し余白をとる） */
   .ans-space {
-    display: block; position: absolute; top: 0; right: 0;
+    display: block; position: absolute; top: 0; right: 5mm;
     font-size: 9.5pt; color: #000; font-weight: 700;
   }
   .ans-space .box {
-    display: inline-block; min-width: 14mm; border: 1.2pt solid #000;
+    display: inline-block; min-width: 13mm; border: 1.2pt solid #000;
     border-radius: 2mm; height: 6.5mm; vertical-align: middle; margin-left: 1.5mm;
   }
 
@@ -282,9 +283,9 @@ body.show-answers .expl { display: block; }
 <body>
 <div class="wrap">
   <header class="title">
-    <h1>📝 質量保存の法則 れんしゅう問題</h1>
+    <h1>📝 質量保存の法則 練習問題</h1>
     <span class="sub">中2理科〈化学変化と物質の質量〉</span>
-    <span class="name-line">2年　　組　　番　名前　　　　　　　　　　　　</span>
+    <span class="name-line">　　年　　組　　番　名前　　　　　　　　　　　　</span>
   </header>
 
   <div class="toolbar">
@@ -302,7 +303,7 @@ body.show-answers .expl { display: block; }
   </div>
 
   <footer class="page-foot">
-    🔬 <a href="index.html">シミュレーション「質量保存の法則ラボ」</a> でふり返ると、まちがえた問題のしくみが見えるよ！
+    🔬 <a href="index.html">シミュレーション「質量保存の法則ラボ」</a> で振り返ると、間違えた問題の仕組みが見えるよ！
   </footer>
 </div>
 
@@ -316,11 +317,11 @@ const KANA = ['ア', 'イ', 'ウ', 'エ'];
 const MARU = ['○', '×'];
 
 const PARTS = [
-  { id: 1, badge: 'パート 1', title: '質量はどうなる？ 5つのパターン', note: '実験のようすを思いうかべて選ぼう' },
-  { id: 2, badge: 'パート 2', title: '理由としくみ', note: '原子で考えるのがコツ！' },
+  { id: 1, badge: 'パート 1', title: '質量はどうなる？ 5つのパターン', note: '実験の様子を思い浮かべて選ぼう' },
+  { id: 2, badge: 'パート 2', title: '理由と仕組み', note: '原子で考えるのがコツ！' },
   { id: 3, badge: 'パート 3', title: '計算してみよう', note: '反応の前後で合計は同じ！' },
-  { id: 4, badge: 'パート 4', title: '○か ×か', note: 'ひっかけ注意！' },
-  { id: 5, badge: 'パート 5', title: '説明してみよう ✍️', note: '考えを自分のことばで書こう' },
+  { id: 4, badge: 'パート 4', title: '○か ×か', note: '引っかけ注意！' },
+  { id: 5, badge: 'パート 5', title: '説明してみよう ✍️', note: '考えを自分の言葉で書こう' },
 ];
 
 const QUESTIONS = [
@@ -330,7 +331,7 @@ const QUESTIONS = [
     q: '燃焼皿にのせた<b>銅の粉</b>を、<b>空気中で</b>加熱した。質量はどうなる？',
     c: ['大きくなる', '小さくなる', '変わらない'],
     a: 0,
-    e: '空気中の<b>酸素が銅に結びつく</b>ぶんだけ重くなる（銅＋酸素→酸化銅）。シミュレーションのスチールウール（鉄）と同じしくみ。',
+    e: '空気中の<b>酸素が銅に結びつく</b>分だけ重くなる（銅＋酸素→酸化銅）。シミュレーションのスチールウール（鉄）と同じ仕組み。',
   },
   {
     part: 1,
@@ -358,9 +359,9 @@ const QUESTIONS = [
     q: '<b>ビーカー（ふたなし）</b>の中で、炭酸水素ナトリウムに塩酸を加えたら、二酸化炭素が発生した。質量はどうなる？',
     c: ['大きくなる', '小さくなる', '変わらない'],
     a: 1,
-    e: '発生した二酸化炭素が<b>空気中へ出ていく</b>ぶんだけ軽くなる。④とのちがいは「ふたがあるか」だけ！',
+    e: '発生した二酸化炭素が<b>空気中へ出ていく</b>分だけ軽くなる。④との違いは「ふたがあるか」だけ！',
   },
-  // ===== パート2: 理由としくみ =====
+  // ===== パート2: 理由と仕組み =====
   {
     part: 2,
     q: '<b>質量保存の法則</b>が成り立つ理由として、もっとも正しいものはどれ？',
@@ -371,19 +372,19 @@ const QUESTIONS = [
       '化学変化では気体が発生しないから',
     ],
     a: 0,
-    e: '化学変化は原子の<b>組みかえ</b>。原子は<b>うまれない・きえない</b>から、種類と数＝質量はそのまま。',
+    e: '化学変化は原子の<b>組み替え</b>。原子は<b>生まれない・消えない</b>から、種類と数＝質量はそのまま。',
   },
   {
     part: 2,
     q: '問1で、銅を空気中で加熱すると質量が<b>大きくなった理由</b>は？',
     c: [
       '銅の原子の数が増えたから',
-      '加えた熱のぶんだけ重くなったから',
+      '加えた熱の分だけ重くなったから',
       '空気中の酸素が銅に結びついたから',
       '銅の原子そのものが重い原子に変わったから',
     ],
     a: 2,
-    e: '増えたぶんの正体は<b>結びついた酸素の質量</b>。酸素は見えないけれど、ちゃんと質量がある。',
+    e: '増えた分の正体は<b>結びついた酸素の質量</b>。酸素は見えないけれど、ちゃんと質量がある。',
   },
   {
     part: 2,
@@ -395,14 +396,14 @@ const QUESTIONS = [
       '反応で原子の数が減ったから',
     ],
     a: 1,
-    e: 'CO₂は<b>消えたのではなく、空気中へ逃げた</b>だけ。逃げたぶんまで合わせれば質量は保存されている。',
+    e: 'CO₂は<b>消えたのではなく、空気中へ逃げた</b>だけ。逃げた分まで合わせれば質量は保存されている。',
   },
   {
     part: 2,
-    q: '問4の実験（密閉ビン）のあと、<b>ふたをあけて</b>しばらくおくと、全体の質量はどうなる？',
-    c: ['大きくなる', '小さくなる', '変わらない', 'いったん増えてから元にもどる'],
+    q: '問4の実験（密閉ビン）のあと、<b>ふたを開けて</b>しばらくおくと、全体の質量はどうなる？',
+    c: ['大きくなる', '小さくなる', '変わらない', 'いったん増えてから元に戻る'],
     a: 1,
-    e: 'ふたをあけると、閉じこめられていた<b>CO₂が外へ逃げていく</b>ので、そのぶん軽くなる。',
+    e: 'ふたを開けると、閉じこめられていた<b>CO₂が外へ逃げていく</b>ので、その分軽くなる。',
   },
   // ===== パート3: 計算 =====
   {
@@ -414,30 +415,30 @@ const QUESTIONS = [
   },
   {
     part: 3,
-    q: '密閉容器の中で炭酸水素ナトリウムと塩酸を反応させた。反応前の全体は<b>58.0g</b>。反応後にふたをあけてしばらくすると<b>57.4g</b>になった。逃げた二酸化炭素は何g？',
+    q: '密閉容器の中で炭酸水素ナトリウムと塩酸を反応させた。反応前の全体は<b>58.0g</b>。反応後にふたを開けてしばらくすると<b>57.4g</b>になった。逃げた二酸化炭素は何g？',
     c: ['0.4 g', '0.6 g', '1.6 g', '57.4 g'],
     a: 1,
-    e: '<b>へった質量＝逃げた気体の質量</b>。58.0−57.4＝<b>0.6g</b>。',
+    e: '<b>減った質量＝逃げた気体の質量</b>。58.0−57.4＝<b>0.6g</b>。',
   },
   {
     part: 3,
     q: '石灰石<b>2.0g</b>をうすい塩酸<b>10.0g</b>に入れたら（ふたなし）、気体が発生して、反応後の全体は<b>11.2g</b>だった。発生した気体は何g？',
     c: ['0.8 g', '1.2 g', '2.0 g', '8.0 g'],
     a: 0,
-    e: '反応前の合計は 2.0＋10.0＝<b>12.0g</b>。12.0−11.2＝<b>0.8g</b> が空気中へ逃げた気体のぶん。',
+    e: '反応前の合計は 2.0＋10.0＝<b>12.0g</b>。12.0−11.2＝<b>0.8g</b> が空気中へ逃げた気体の分。',
   },
   // ===== パート4: ○× =====
   {
     part: 4,
-    q: '「砂糖60gを水200gにとかすと、とけて見えなくなっても、全体の質量は260gになる」',
-    c: ['○ 正しい', '× まちがい'],
+    q: '「砂糖60gを水200gに溶かすと、溶けて見えなくなっても、全体の質量は260gになる」',
+    c: ['○ 正しい', '× 間違い'],
     a: 0,
-    e: 'とけて<b>見えなくなっても、砂糖の粒子はなくなっていない</b>から、ぜんたいはきっちり 60＋200＝260g。質量保存の考え方は、とけたり状態が変わったりする<b>物理変化でも成り立つ</b>。',
+    e: '溶けて<b>見えなくなっても、砂糖の粒子は無くなっていない</b>から、全体はきっちり 60＋200＝260g。質量保存の考え方は、溶けたり状態が変わったりする<b>物理変化でも成り立つ</b>。',
   },
   {
     part: 4,
     q: '「気体が出ていく反応では、質量保存の法則は成り立たない」',
-    c: ['○ 正しい', '× まちがい'],
+    c: ['○ 正しい', '× 間違い'],
     a: 1,
     e: 'はかりの上から見ると減るけれど、<b>逃げた気体まで合わせれば質量は保存</b>されている。質量保存の法則は<b>すべての化学変化</b>で成り立つ。',
   },
@@ -445,7 +446,7 @@ const QUESTIONS = [
   {
     part: 5,
     type: 'desc',
-    q: '同じ反応（炭酸水素ナトリウム＋塩酸）なのに、<b>密閉したビン</b>（問4）では質量が変わらず、<b>ふたのないビーカー</b>（問5）では質量が小さくなった。この「ちがい」が生まれる理由を説明しなさい。',
+    q: '同じ反応（炭酸水素ナトリウム＋塩酸）なのに、<b>密閉したビン</b>（問4）では質量が変わらず、<b>ふたのないビーカー</b>（問5）では質量が小さくなった。この「違い」が生まれる理由を説明しなさい。',
     hint: ['二酸化炭素', '空気中', '出ていく', '閉じこめる'],
     model: 'どちらの実験でも二酸化炭素が発生する。<b>密閉したビン</b>では、発生した二酸化炭素がビンの中に残るので、全体の質量は変わらない。<b>ふたのないビーカー</b>では、発生した二酸化炭素が空気中へ出ていくので、その分だけ質量が小さくなる。（原子そのものは消えていないので、逃げた気体まで合わせれば質量は保存されている。）',
     points: ['どちらも二酸化炭素（気体）が発生することにふれている', '密閉＝気体が中に残る → 変わらない、と書けている', 'ふたなし＝気体が空気中へ出ていく → 減る、と書けている'],
@@ -475,7 +476,7 @@ function render() {
     if (Q.type === 'desc') {
       html += `<div class="qcard desc-card" data-qi="${qi}">
         <div class="qrow"><span class="qnum">${qi + 1}</span><span class="qtext">${Q.q}</span></div>
-        <div class="hint-words">💬 つかうことば：${Q.hint.map(h => `<span class="hint-chip">${h}</span>`).join('')}</div>
+        <div class="hint-words">💬 使う言葉：${Q.hint.map(h => `<span class="hint-chip">${h}</span>`).join('')}</div>
         <textarea class="desc-input" rows="3" placeholder="ここに考えを書いてみよう…"></textarea>
         <div class="write-lines"><span></span><span></span><span></span></div>
         <button class="reveal-btn" data-qi="${qi}">✏️ 模範解答を見る</button>
@@ -511,7 +512,7 @@ function render() {
     btn.addEventListener('click', () => {
       const ex = document.getElementById('expl-' + btn.dataset.qi);
       const showing = ex.classList.toggle('show');
-      btn.textContent = showing ? '✏️ 模範解答をかくす' : '✏️ 模範解答を見る';
+      btn.textContent = showing ? '✏️ 模範解答を隠す' : '✏️ 模範解答を見る';
     });
   });
 }
@@ -532,7 +533,7 @@ function answer(qi, ci, card) {
     else btn.classList.add('dim');
   });
   const v = document.getElementById('verdict-' + qi);
-  v.textContent = hit ? '🎉 せいかい！' : '😢 ざんねん…正解は 緑 のほう！';
+  v.textContent = hit ? '🎉 正解！' : '😢 残念…正解は緑の方！';
   v.className = 'verdict-line ' + (hit ? 'hit' : 'miss');
   document.getElementById('expl-' + qi).classList.add('show');
 
@@ -544,14 +545,14 @@ function answer(qi, ci, card) {
 
 function showFinal() {
   const fb = document.getElementById('final-banner');
-  document.getElementById('final-score').textContent = `けっか発表！ ${correct} / ${TOTAL} 問 せいかい`;
+  document.getElementById('final-score').textContent = `結果発表！ ${correct} / ${TOTAL} 問 正解`;
   const rate = correct / TOTAL;
   let msg;
-  if (rate === 1) msg = 'パーフェクト！🏆 原子マスターの称号をさずけます。';
-  else if (rate >= 0.8) msg = 'すばらしい！あと少しで全問制覇。まちがえた問題の解説を読み直そう。';
+  if (rate === 1) msg = 'パーフェクト！🏆 原子マスターの称号を授けます。';
+  else if (rate >= 0.8) msg = 'すばらしい！あと少しで全問制覇。間違えた問題の解説を読み直そう。';
   else if (rate >= 0.6) msg = 'いいペース！「ふたがあるか・気体が出るか」に注目すると正答率が上がるよ。';
   else msg = 'まずは <a href="index.html">シミュレーション</a> で4つの実験をもう一度見てから、再チャレンジしよう！';
-  document.getElementById('final-msg').innerHTML = msg + '<br>🔬 <a href="index.html">シミュレーションでふり返る</a>';
+  document.getElementById('final-msg').innerHTML = msg + '<br>🔬 <a href="index.html">シミュレーションで振り返る</a>';
   fb.classList.add('show');
   fb.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
