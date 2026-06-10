@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>質量保存の法則ラボ｜中2理科</title>
+<meta property="og:title" content="質量保存の法則ラボ">
+<meta property="og:description" content="中2「化学変化と物質の質量」。燃焼・沈殿・気体発生の4実験を、粒子の見える化スイッチで実体的に学ぶシミュレーション教材。">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&family=Kaisei+Decol:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.min.js"></script>
+<style>
+:root {
+  --bg: #FAF6E8;
+  --paper: #FFFBF0;
+  --ink: #3A3530;
+  --accent: #D97A4B;
+  --accent2: #4A7BAA;
+  --green: #4CB780;
+  --pink: #E8849C;
+  --grid: rgba(180, 160, 120, 0.12);
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'M PLUS Rounded 1c', system-ui, sans-serif;
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+  min-height: 100vh;
+}
+.wrap { max-width: 1100px; margin: 0 auto; padding: 6px 16px 14px; }
+header.title {
+  display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+  margin-bottom: 6px; border-bottom: 2px dashed var(--accent); padding-bottom: 3px;
+}
+header.title h1 { font-size: 18px; margin: 0; font-weight: 800; letter-spacing: 0.04em; white-space: nowrap; }
+header.title .sub { font-size: 12.5px; color: #8a7a60; font-family: 'Kaisei Decol', serif; white-space: nowrap; }
+
+/* === シーンタブ === */
+.scene-tabs { display: flex; gap: 6px; margin-bottom: 6px; flex-wrap: wrap; }
+.scene-tab {
+  flex: 1 1 150px;
+  background: #fff; border: 2px solid #D8CCA8; border-radius: 12px;
+  padding: 6px 8px; cursor: pointer; font-family: inherit; text-align: left;
+  transition: transform 0.1s, box-shadow 0.1s;
+  display: flex; align-items: center; gap: 7px;
+}
+.scene-tab:hover { transform: translateY(-1px); }
+.scene-tab .num {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: #EFE6CC; color: #8a7a60;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 12px; flex-shrink: 0;
+}
+.scene-tab .tx { display: flex; flex-direction: column; }
+.scene-tab .t1 { font-weight: 800; font-size: 12.5px; line-height: 1.25; }
+.scene-tab .t2 { font-size: 10px; color: #9a8a70; line-height: 1.2; }
+.scene-tab.active { border-color: var(--accent); background: #FFF3E8; box-shadow: 2px 2px 0 var(--accent); }
+.scene-tab.active .num { background: var(--accent); color: #fff; }
+
+/* === メイン行 === */
+.main-row { display: flex; gap: 10px; align-items: flex-start; }
+.stage {
+  flex: 1; min-width: 0;
+  background: var(--paper); border-radius: 12px; padding: 4px;
+  box-shadow: 0 3px 10px rgba(120, 100, 80, 0.08);
+  border: 2px solid #EADFC4; position: relative;
+}
+#canvas-host { width: 100%; display: block; }
+/* max-width: canvasバッファ幅がコンテナより大きい瞬間でもはみ出さない（モバイル対策）
+   p5がcanvasにインラインstyleでwidth/heightを付けるため !important で上書きする */
+#canvas-host canvas { display: block; border-radius: 8px; max-width: 100% !important; height: auto !important; }
+
+/* 💡解説 */
+.explain-btn {
+  position: absolute; top: 10px; left: 10px; z-index: 11;
+  background: #fff; border: 2px solid var(--accent2); color: var(--accent2);
+  border-radius: 999px; padding: 4px 12px; font-family: inherit;
+  font-weight: 800; font-size: 12px; cursor: pointer;
+  box-shadow: 2px 2px 0 var(--accent2);
+}
+.explain-btn:hover { transform: translate(-1px,-1px); }
+.overlay-explainer {
+  position: absolute; top: 44px; left: 10px;
+  width: 340px; max-width: 60%; max-height: calc(100% - 60px);
+  background: rgba(255, 251, 240, 0.97);
+  border: 2px solid #EADFC4; border-left: 5px solid var(--accent2);
+  border-radius: 14px; padding: 12px 14px;
+  display: none; z-index: 10; overflow-y: auto;
+  box-shadow: 0 6px 20px rgba(120, 100, 80, 0.18);
+}
+.overlay-explainer.show { display: block; animation: pop-in 0.18s ease-out; }
+@keyframes pop-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+.overlay-explainer .close-btn {
+  position: absolute; top: 6px; right: 8px; background: transparent; border: none;
+  font-size: 18px; cursor: pointer; color: #8a7a60; padding: 2px 6px; line-height: 1;
+}
+.overlay-explainer h3 { margin: 0 0 8px; font-size: 14px; color: var(--accent2); }
+.overlay-explainer .body { font-size: 12.5px; line-height: 1.8; }
+.overlay-explainer .body p { margin: 5px 0; }
+.overlay-explainer .rx {
+  background: #FFFBF0; border-left: 3px solid var(--accent);
+  padding: 5px 9px; margin: 7px 0; font-family: 'Kaisei Decol', serif; font-size: 12.5px;
+}
+.overlay-explainer .keybox {
+  background: #FFEBD0; border-radius: 8px; padding: 6px 9px; margin: 7px 0; font-size: 12px;
+}
+
+/* === 右カラム === */
+.ctrl-col {
+  width: 200px; flex-shrink: 0;
+  display: flex; flex-direction: column; gap: 7px;
+}
+.ctrl-box {
+  background: var(--paper); border: 2px solid #EADFC4; border-radius: 12px;
+  padding: 8px 10px;
+}
+.ctrl-box .label { font-size: 10.5px; font-weight: 800; color: #9a8a70; letter-spacing: 0.06em; margin-bottom: 5px; }
+
+/* 粒子スイッチ */
+.particle-switch { display: flex; background: #F0E6CC; border-radius: 999px; padding: 3px; gap: 3px; }
+.particle-switch button {
+  flex: 1; background: transparent; border: none; border-radius: 999px;
+  padding: 6px 4px; font-family: inherit; font-weight: 800; font-size: 12px;
+  cursor: pointer; color: #8a7a60; transition: background 0.12s;
+}
+.particle-switch button.active { background: var(--accent2); color: #fff; box-shadow: 0 2px 5px rgba(74,123,170,0.3); }
+.switch-hint { font-size: 10px; color: #9a8a70; margin-top: 4px; line-height: 1.4; text-align: center; }
+
+/* 予想ボタン */
+.predict-btns { display: flex; flex-direction: column; gap: 5px; }
+.predict-btns button {
+  background: #fff; border: 2px solid #C8BC9A; border-radius: 10px;
+  padding: 7px 8px; font-family: inherit; font-weight: 700; font-size: 12.5px;
+  cursor: pointer; color: var(--ink); text-align: center;
+  transition: transform 0.08s;
+}
+.predict-btns button:hover:not(:disabled) { transform: translateY(-1px); border-color: var(--accent); }
+.predict-btns button.selected { background: #FFF3E8; border-color: var(--accent); box-shadow: 2px 2px 0 var(--accent); }
+.predict-btns button:disabled { opacity: 0.55; cursor: default; }
+.predict-btns button.was-answer { background: #E8F6EE; border-color: var(--green); box-shadow: 2px 2px 0 var(--green); }
+
+/* アクションボタン */
+.btn {
+  background: #fff; border: 2px solid var(--ink); border-radius: 999px;
+  padding: 9px 12px; font-family: inherit; font-weight: 800; font-size: 13.5px;
+  cursor: pointer; color: var(--ink); box-shadow: 2px 2px 0 var(--ink);
+  transition: transform 0.08s, box-shadow 0.08s; width: 100%;
+}
+.btn:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow: 3px 3px 0 var(--ink); }
+.btn:active:not(:disabled) { transform: translate(1px,1px); box-shadow: 1px 1px 0 var(--ink); }
+.btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 2px 2px 0 #8C4A28; }
+.btn.lid { background: var(--accent2); color: #fff; border-color: var(--accent2); box-shadow: 2px 2px 0 #2A5A8A; }
+.btn.ghost { font-size: 12px; padding: 6px 10px; }
+.btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; box-shadow: 2px 2px 0 var(--ink); }
+.btn.hidden { display: none; }
+
+/* 結果ボックス */
+.result-box {
+  background: var(--paper); border: 2px solid #EADFC4; border-radius: 12px;
+  padding: 8px 10px; font-size: 12px; line-height: 1.6; display: none;
+}
+.result-box.show { display: block; animation: pop-in 0.2s ease-out; }
+.result-box .verdict { font-weight: 800; font-size: 13px; }
+.result-box .verdict.hit { color: var(--green); }
+.result-box .verdict.miss { color: var(--pink); }
+.result-box .fact { margin-top: 3px; color: #6a5a40; }
+
+.next-hint {
+  font-size: 11px; color: #8a7a60; background: #FFF3E8;
+  border-radius: 10px; padding: 6px 9px; line-height: 1.5; display: none;
+}
+.next-hint.show { display: block; }
+
+footer { margin-top: 8px; font-size: 10.5px; color: #9a8a70; text-align: center; }
+footer a { color: var(--accent2); }
+
+@media (max-width: 820px) {
+  /* 縦積みでは align-items が横方向に効くため stretch に戻す（stageを全幅に） */
+  .main-row { flex-direction: column; align-items: stretch; }
+  .ctrl-col { width: 100%; flex-direction: row; flex-wrap: wrap; }
+  .ctrl-col .ctrl-box { flex: 1 1 45%; }
+  .overlay-explainer { max-width: 86%; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="title">
+    <h1>⚖️ 質量保存の法則ラボ</h1>
+    <span class="sub">中2理科〈化学変化と物質の質量〉</span>
+  </header>
+
+  <div class="scene-tabs">
+    <button class="scene-tab active" data-scene="1">
+      <span class="num">1</span>
+      <span class="tx"><span class="t1">🔥 空気中でもやす</span><span class="t2">てんびんは かたむく？</span></span>
+    </button>
+    <button class="scene-tab" data-scene="2">
+      <span class="num">2</span>
+      <span class="tx"><span class="t1">🫙 とじこめてもやす</span><span class="t2">密閉フラスコの中で…</span></span>
+    </button>
+    <button class="scene-tab" data-scene="3">
+      <span class="num">3</span>
+      <span class="tx"><span class="t1">🥛 まぜると白い沈殿</span><span class="t2">硫酸＋水酸化バリウム</span></span>
+    </button>
+    <button class="scene-tab" data-scene="4">
+      <span class="num">4</span>
+      <span class="tx"><span class="t1">🫧 あわが出る反応</span><span class="t2">密閉ビン → ふたをあけると？</span></span>
+    </button>
+  </div>
+
+  <div class="main-row">
+    <div class="stage">
+      <button class="explain-btn" id="explain-btn">💡 かいせつ</button>
+      <div class="overlay-explainer" id="explainer">
+        <button class="close-btn" id="explain-close">✕</button>
+        <h3 id="exp-title"></h3>
+        <div class="body" id="exp-body"></div>
+      </div>
+      <div id="canvas-host"></div>
+    </div>
+
+    <aside class="ctrl-col">
+      <div class="ctrl-box">
+        <div class="label">りかのメガネ 👓</div>
+        <div class="particle-switch">
+          <button id="view-eye" class="active">👀 見た目</button>
+          <button id="view-particle">🔬 粒子</button>
+        </div>
+        <div class="switch-hint" id="switch-hint">スイッチひとつで<br>見えない粒子が見える！</div>
+      </div>
+
+      <div class="ctrl-box">
+        <div class="label" id="predict-label">Q. 質量はどうなる？</div>
+        <div class="predict-btns" id="predict-btns"></div>
+      </div>
+
+      <button class="btn primary" id="action-btn" disabled>🔥 実験スタート</button>
+      <button class="btn lid hidden" id="lid-btn">🫳 ふたをあける</button>
+      <button class="btn lid hidden" id="flask-btn">🔓 ふたを開けて点火する</button>
+      <button class="btn ghost" id="reset-btn">↩ もう一度</button>
+
+      <div class="result-box" id="result-box">
+        <div class="verdict" id="result-verdict"></div>
+        <div class="fact" id="result-fact"></div>
+      </div>
+      <div class="next-hint" id="next-hint"></div>
+    </aside>
+  </div>
+
+  <footer>つぎは <a href="practice.html">📝 れんしゅう問題</a> にチャレンジ！　原子は うまれない・きえない・つくりかえられるだけ。</footer>
+</div>
+
+<script>
+/* ============================================================
+   質量保存の法則ラボ
+   scene 1: 開放でスチールウール燃焼 → 重くなる（上皿てんびん）
+   scene 2: 密閉フラスコで燃焼 → 変わらない
+   scene 3: 硫酸 + 水酸化バリウム → 白い沈殿、変わらない
+   scene 4: 炭酸水素ナトリウム + 塩酸（密閉ビン）→ 変わらない
+            → ふたをあける → CO2が逃げて減る
+   ============================================================ */
+
+// ---------- 状態 ----------
+let scene = 1;
+let phase = 'predict';      // predict | ready | reacting | done | opening | opened
+let particleView = false;   // false=👀見た目 / true=🔬粒子
+let scene2Open = false;     // シーン2: false=密閉点火 / true=ふたを開けて点火
+let prediction = null;
+let animT = 0;              // 反応の進行 0..1
+let openT = 0;              // ふた開け後の進行 0..1
+let canvasW = 840, canvasH = 470;
+let sparks = [];            // 火の粉
+let bubbles = [];           // 見た目モードの泡
+let precip = [];            // 沈殿粒
+let atoms = [];             // 粒子モードの原子 {el,x,y,tx,ty,sx,sy,grp,escaped}
+let flashT = 0;
+
+// ---------- 元素カラー ----------
+const ELEM = {
+  Fe: { c: '#8B8F94', tc: '#fff', r: 11, label: 'Fe' },
+  O:  { c: '#E05B5B', tc: '#fff', r: 10, label: 'O' },
+  H:  { c: '#F4F4F4', tc: '#777', r: 7,  label: 'H' },
+  S:  { c: '#E8C840', tc: '#7a6510', r: 10, label: 'S' },
+  Ba: { c: '#5BAFA8', tc: '#fff', r: 12, label: 'Ba' },
+  Na: { c: '#A47BD0', tc: '#fff', r: 10, label: 'Na' },
+  C:  { c: '#5A5A5A', tc: '#fff', r: 9,  label: 'C' },
+  Cl: { c: '#6BBF6B', tc: '#fff', r: 10, label: 'Cl' },
+};
+
+// ---------- シーン定義 ----------
+const PREDICT_MASS = [
+  { key: 'up',   label: '⬆ 大きくなる' },
+  { key: 'same', label: '➡ 変わらない' },
+  { key: 'down', label: '⬇ 小さくなる' },
+];
+const PREDICT_TILT = [
+  { key: 'right', label: '↘ 右（もやした方）が下がる' },
+  { key: 'same',  label: '⚖ つり合ったまま' },
+  { key: 'left',  label: '↙ 左（そのまま）が下がる' },
+];
+
+const SCENES = {
+  1: {
+    predictLabel: 'Q. てんびんはどうなる？',
+    options: PREDICT_TILT,
+    answer: 'right',
+    action: '🔥 右だけ もやす',
+    resultFact: 'もやした方が下がった！<br>（くっついた酸素のぶん 質量がふえた）',
+    nextHint: '🔬 粒子スイッチで「ふえた質量の正体」を見てみよう → つぎはシーン2「とじこめてもやす」へ！',
+  },
+  2: {
+    predictLabel: 'Q. 質量はどうなる？',
+    options: PREDICT_MASS,
+    answer: 'same',
+    action: '🔥 点火する',
+    resultFact: '85.32 g → 85.32 g<br>同じ「もえる」なのに変わらない！？',
+    nextHint: '🔬 粒子で見ると…酸素はフラスコの中にいた！ 出入りがなければ質量は変わらない＝<b>質量保存の法則</b>',
+  },
+  3: {
+    predictLabel: 'Q. 質量はどうなる？',
+    options: PREDICT_MASS,
+    answer: 'same',
+    action: '🥛 まぜる',
+    resultFact: '127.45 g → 127.45 g<br>白い沈殿ができても変わらない！',
+    nextHint: '🔬 粒子で見ると…原子の「組み合わせ」が変わっただけ。原子の種類と数はそのまま！',
+  },
+  4: {
+    predictLabel: 'Q. 質量はどうなる？',
+    options: PREDICT_MASS,
+    answer: 'same',
+    action: '🫙 かたむけて まぜる',
+    resultFact: '58.00 g → 58.00 g<br>あわ（CO₂）が出ても、とじこめていれば変わらない！',
+    nextHint: 'では…「ふたをあける」と どうなる？ よそうしてからボタンを押そう！',
+  },
+};
+
+// シーン2の「ふたを開けて点火」バージョン（①と同じ＝酸素が外から入ってふえる）
+const SCENE2_OPEN = {
+  predictLabel: 'Q. ふたを開けて点火すると？',
+  options: PREDICT_MASS,
+  answer: 'up',
+  action: '🔥 ふたを開けて 点火',
+  resultFact: '84.00 g → 84.80 g<br>ふえた！外から酸素が入ったぶん 重くなった（①と同じ！）',
+  nextHint: '💡 同じフラスコ・同じ反応でも、<b>ふたを開けると変わる</b>。質量保存は「物質の出入りがない」ときの話！🔒ボタンで密閉版と見くらべよう。',
+};
+
+// いま参照すべき設定（シーン2だけ密閉/開放の2モードを持つ）
+function activeConfig() {
+  return (scene === 2 && scene2Open) ? SCENE2_OPEN : SCENES[scene];
+}
+
+const EXPLAIN = {
+  1: {
+    title: '🔥 もやすと重くなるナゾ',
+    body: `<p>スチールウール（鉄）をもやすと、空気中の<b>酸素</b>が鉄に<b>結びつく</b>。</p>
+      <div class="rx">鉄 ＋ 酸素 → 酸化鉄</div>
+      <p>酸素は目に見えないけれど、ちゃんと<b>質量がある</b>。だから結びついた酸素のぶんだけ重くなる！</p>
+      <div class="keybox">📌 銅を空気中で加熱しても同じ。<br>銅 ＋ 酸素 → 酸化銅（質量は大きくなる）</div>
+      <p>🔬スイッチで、空気中の酸素分子 O₂ が飛びこんでくる様子を見てみよう。</p>`,
+  },
+  2: {
+    title: '🫙 質量保存の法則',
+    body: `<p>フラスコに<b>ふたをして</b>もやすと、使われる酸素も<b>ぜんぶ容器の中</b>。外から何も入らず、外へ何も出ていかない。</p>
+      <div class="keybox">⚖️ <b>質量保存の法則</b><br>化学変化の前と後で、物質ぜんたいの質量は変わらない。</div>
+      <p>理由はシンプル。化学変化では原子が<b>新しくできたり、なくなったりしない</b>から。</p>
+      <p>原子の<b>組み合わせ</b>が変わるだけで、原子の<b>種類と数</b>は変わらない。だから質量も変わらない！</p>
+      <div class="keybox">🔓 「ふたを開けて点火」すると…外から酸素が入って<b>重くなる</b>（①と同じ）。質量保存は<b>物質の出入りがない</b>ときの話、と確かめよう。</div>`,
+  },
+  3: {
+    title: '🥛 白い沈殿ができても…',
+    body: `<p>うすい硫酸に水酸化バリウム水溶液を混ぜると、白い沈殿（硫酸バリウム）ができる。</p>
+      <div class="rx">H₂SO₄ ＋ Ba(OH)₂ → BaSO₄ ＋ 2H₂O</div>
+      <p>見た目は大変化！でも🔬で見ると、原子が<b>ならびかえられただけ</b>。</p>
+      <div class="keybox">📌 たとえば 硫酸10g ＋ 水酸化バリウム水溶液17g なら、反応後も合計は<b>27g</b>のまま！</div>
+      <p>気体が出ない反応なら、ふたをしなくても質量は変わらない。</p>`,
+  },
+  4: {
+    title: '🫧 へったのは「消えた」んじゃない',
+    body: `<p>炭酸水素ナトリウムに塩酸を加えると二酸化炭素が発生する。</p>
+      <div class="rx">NaHCO₃ ＋ HCl → NaCl ＋ H₂O ＋ CO₂</div>
+      <p><b>密閉ビンの中</b>なら、CO₂も中にいるので質量は変わらない。</p>
+      <p>ふたをあけると CO₂ が空気中へ<b>にげていく</b>ので、そのぶん軽くなる。</p>
+      <div class="keybox">📌 ビーカー（ふたなし）で混ぜたときに軽くなるのも同じ理由！<br>へった質量 ＝ にげた CO₂ の質量</div>
+      <p>原子は消えていない。<b>にげたぶんまで合わせれば、質量はぴったり保存</b>されている！</p>`,
+  },
+};
+
+// ============================================================
+// 原子モデルの構築
+// ============================================================
+function jitter(n) { return (Math.random() - 0.5) * n; }
+
+// クラスタ定義: 相対座標で原子を並べる
+function molH2SO4(cx, cy) {
+  return [
+    { el: 'S', dx: 0, dy: 0 }, { el: 'O', dx: -14, dy: -10 }, { el: 'O', dx: 14, dy: -10 },
+    { el: 'O', dx: -14, dy: 10 }, { el: 'O', dx: 14, dy: 10 },
+    { el: 'H', dx: -26, dy: -16 }, { el: 'H', dx: 26, dy: -16 },
+  ].map(a => ({ el: a.el, x: cx + a.dx, y: cy + a.dy }));
+}
+function molBaOH2(cx, cy) {
+  return [
+    { el: 'Ba', dx: 0, dy: 0 }, { el: 'O', dx: -18, dy: 6 }, { el: 'O', dx: 18, dy: 6 },
+    { el: 'H', dx: -29, dy: 12 }, { el: 'H', dx: 29, dy: 12 },
+  ].map(a => ({ el: a.el, x: cx + a.dx, y: cy + a.dy }));
+}
+function molNaHCO3(cx, cy) {
+  return [
+    { el: 'C', dx: 0, dy: 0 }, { el: 'O', dx: -13, dy: -9 }, { el: 'O', dx: 13, dy: -9 },
+    { el: 'O', dx: 0, dy: 14 }, { el: 'Na', dx: -24, dy: 8 }, { el: 'H', dx: 22, dy: -16 },
+  ].map(a => ({ el: a.el, x: cx + a.dx, y: cy + a.dy }));
+}
+function molHCl(cx, cy) {
+  return [ { el: 'H', dx: -8, dy: 0 }, { el: 'Cl', dx: 5, dy: 0 } ]
+    .map(a => ({ el: a.el, x: cx + a.dx, y: cy + a.dy }));
+}
+
+// シーンごとの原子セット + 反応後の行き先(tx,ty)
+function buildAtoms() {
+  atoms = [];
+  const L = layout();
+  if (scene === 1 || scene === 2) {
+    // Fe×6 + O2×3 → FeO×6 相当
+    const wool = (scene === 1) ? L.rightPan : L.flaskWool;
+    // シーン1は燃焼後に皿が下がるぶん、行き先を下にずらす
+    const sink = (scene === 1) ? L.armLen * 0.09 : 0;
+    // シーン1: もやさない左の皿の鉄も粒子で見せる（傾くと皿ごと少し上がる）
+    if (scene === 1) {
+      for (let i = 0; i < 6; i++) {
+        const ang = i / 6 * Math.PI * 2;
+        const fx = L.leftPan.x + Math.cos(ang) * L.leftPan.r * 0.62 + jitter(5);
+        const fy = L.leftPan.y + Math.sin(ang) * L.leftPan.r * 0.5 + jitter(4);
+        atoms.push({ el: 'Fe', x: fx, y: fy, sx: fx, sy: fy, tx: fx, ty: fy - sink, grp: 'woolL' });
+      }
+    }
+    const fePos = [];
+    for (let i = 0; i < 6; i++) {
+      const ang = i / 6 * Math.PI * 2;
+      const fx = wool.x + Math.cos(ang) * wool.r * 0.62 + jitter(5);
+      const fy = wool.y + Math.sin(ang) * wool.r * 0.5 + jitter(4);
+      fePos.push({ x: fx, y: fy + sink });
+      atoms.push({ el: 'Fe', x: fx, y: fy, sx: fx, sy: fy, tx: fx, ty: fy + sink, grp: 'wool' });
+    }
+    // O2分子: シーン1は空気中（皿のまわり広め）、シーン2はフラスコ内
+    for (let i = 0; i < 3; i++) {
+      let ox, oy;
+      if (scene === 1) {
+        // 左皿と支柱のあいだの中段（どの画面幅でも腕・皿・ラベルと重ならない空域）
+        ox = canvasW * (0.34 + i * 0.055) + jitter(6);
+        oy = L.pivot.y + 44 + (i % 2) * 26 + jitter(6);
+      } else if (scene2Open) {
+        // ふた開け版: 酸素はフラスコの口の「上」（外の空気）からやってくる → 口を通って中へ
+        const mouthY = L.flask.y - L.flask.r - 36;
+        ox = L.flask.x + (i - 1) * 26 + jitter(5);
+        oy = Math.max(12, mouthY - 22 - i * 20) + jitter(4);
+      } else {
+        // 密閉版: 酸素は最初からフラスコの中
+        const a = -Math.PI / 2 + (i - 1) * 1.1;
+        ox = L.flask.x + Math.cos(a) * L.flask.r * 0.55;
+        oy = L.flask.y + Math.sin(a) * L.flask.r * 0.5 - 8;
+      }
+      // 行き先: Fe i*2, i*2+1 のそば
+      for (let k = 0; k < 2; k++) {
+        const fe = fePos[i * 2 + k];
+        atoms.push({
+          el: 'O',
+          x: ox + (k === 0 ? -9 : 9), y: oy,
+          sx: ox + (k === 0 ? -9 : 9), sy: oy,
+          tx: fe.x + 13, ty: fe.y - 6,
+          grp: 'air', pair: i, gx: (k === 0 ? -9 : 9),
+        });
+      }
+    }
+  }
+  if (scene === 3) {
+    // H2SO4 ×2 (左ビーカー) + Ba(OH)2 ×2 (右の小ビーカー → 注がれて左へ)
+    // 生成: BaSO4×2(沈殿) + H2O×4
+    const bk = L.beaker;
+    const sulf = [ molH2SO4(bk.x - 56, bk.y + 6), molH2SO4(bk.x + 38, bk.y + 32) ];
+    const baoh = [ molBaOH2(L.smallBeaker.x - 6, L.smallBeaker.y + 2), molBaOH2(L.smallBeaker.x + 18, L.smallBeaker.y + 20) ];
+    // BaSO4の沈殿位置(底)
+    const pSites = [ { x: bk.x - 38, y: bk.botY - 14 }, { x: bk.x + 42, y: bk.botY - 14 } ];
+    // H2Oの行き先(液中をただよう)
+    const wSites = [
+      { x: bk.x - 66, y: bk.y - 6 }, { x: bk.x + 64, y: bk.y + 2 },
+      { x: bk.x - 12, y: bk.y - 18 }, { x: bk.x + 22, y: bk.y + 18 },
+    ];
+    for (let m = 0; m < 2; m++) {
+      const s = sulf[m], b = baoh[m], ps = pSites[m];
+      // S,O×4 → BaSO4へ / H×2 → 水へ
+      atoms.push({ el: 'S', x: s[0].x, y: s[0].y, sx: s[0].x, sy: s[0].y, tx: ps.x, ty: ps.y, grp: 'liqL' });
+      const oOff = [ { dx: -14, dy: -10 }, { dx: 14, dy: -10 }, { dx: -14, dy: 10 }, { dx: 14, dy: 10 } ];
+      for (let i = 0; i < 4; i++) {
+        atoms.push({ el: 'O', x: s[1 + i].x, y: s[1 + i].y, sx: s[1 + i].x, sy: s[1 + i].y,
+          tx: ps.x + oOff[i].dx, ty: ps.y + oOff[i].dy, grp: 'liqL' });
+      }
+      const w1 = wSites[m * 2], w2 = wSites[m * 2 + 1];
+      atoms.push({ el: 'H', x: s[5].x, y: s[5].y, sx: s[5].x, sy: s[5].y, tx: w1.x - 10, ty: w1.y + 5, grp: 'liqL' });
+      atoms.push({ el: 'H', x: s[6].x, y: s[6].y, sx: s[6].x, sy: s[6].y, tx: w2.x - 10, ty: w2.y + 5, grp: 'liqL' });
+      // Ba → BaSO4 / O,H → 水
+      atoms.push({ el: 'Ba', x: b[0].x, y: b[0].y, sx: b[0].x, sy: b[0].y, tx: ps.x, ty: ps.y - 21, grp: 'liqR' });
+      atoms.push({ el: 'O', x: b[1].x, y: b[1].y, sx: b[1].x, sy: b[1].y, tx: w1.x, ty: w1.y, grp: 'liqR' });
+      atoms.push({ el: 'O', x: b[2].x, y: b[2].y, sx: b[2].x, sy: b[2].y, tx: w2.x, ty: w2.y, grp: 'liqR' });
+      atoms.push({ el: 'H', x: b[3].x, y: b[3].y, sx: b[3].x, sy: b[3].y, tx: w1.x + 10, ty: w1.y + 5, grp: 'liqR' });
+      atoms.push({ el: 'H', x: b[4].x, y: b[4].y, sx: b[4].x, sy: b[4].y, tx: w2.x + 10, ty: w2.y + 5, grp: 'liqR' });
+    }
+  }
+  if (scene === 4) {
+    // NaHCO3 ×3 (粉) + HCl ×3 (液) → NaCl×3 + H2O×3 + CO2×3
+    const bt = L.bottle;
+    const naSites = [ { x: bt.x - 40, y: bt.botY - 16 }, { x: bt.x + 2, y: bt.botY - 20 }, { x: bt.x + 40, y: bt.botY - 14 } ];
+    const hclSites = [ { x: L.vial.x - 12, y: L.vial.y }, { x: L.vial.x + 10, y: L.vial.y - 8 }, { x: L.vial.x - 2, y: L.vial.y - 18 } ];
+    // 生成物の行き先
+    const naclSites = [ { x: bt.x - 46, y: bt.liqY + 26 }, { x: bt.x + 6, y: bt.liqY + 38 }, { x: bt.x + 48, y: bt.liqY + 28 } ];
+    const h2oSites  = [ { x: bt.x - 24, y: bt.liqY + 14 }, { x: bt.x + 28, y: bt.liqY + 16 }, { x: bt.x - 2, y: bt.liqY + 24 } ];
+    const co2Sites  = [ { x: bt.x - 34, y: bt.gasY }, { x: bt.x + 4, y: bt.gasY - 16 }, { x: bt.x + 38, y: bt.gasY - 4 } ];
+    for (let m = 0; m < 3; m++) {
+      const base = molNaHCO3(naSites[m].x, naSites[m].y);
+      const acid = molHCl(hclSites[m].x, hclSites[m].y);
+      const nc = naclSites[m], wt = h2oSites[m], cs = co2Sites[m];
+      // NaHCO3: C → CO2中心 / O(2つ) → CO2 / O(1つ) → H2O / Na → NaCl / H → H2O
+      atoms.push({ el: 'C', x: base[0].x, y: base[0].y, sx: base[0].x, sy: base[0].y, tx: cs.x, ty: cs.y, grp: 'gas', mol: m, mcx: cs.x });
+      atoms.push({ el: 'O', x: base[1].x, y: base[1].y, sx: base[1].x, sy: base[1].y, tx: cs.x - 15, ty: cs.y, grp: 'gas', mol: m, mcx: cs.x });
+      atoms.push({ el: 'O', x: base[2].x, y: base[2].y, sx: base[2].x, sy: base[2].y, tx: cs.x + 15, ty: cs.y, grp: 'gas', mol: m, mcx: cs.x });
+      atoms.push({ el: 'O', x: base[3].x, y: base[3].y, sx: base[3].x, sy: base[3].y, tx: wt.x, ty: wt.y, grp: 'liq', mol: m });
+      atoms.push({ el: 'Na', x: base[4].x, y: base[4].y, sx: base[4].x, sy: base[4].y, tx: nc.x - 9, ty: nc.y, grp: 'liq', mol: m });
+      atoms.push({ el: 'H', x: base[5].x, y: base[5].y, sx: base[5].x, sy: base[5].y, tx: wt.x - 10, ty: wt.y + 6, grp: 'liq', mol: m });
+      // HCl: H → H2O / Cl → NaCl
+      atoms.push({ el: 'H', x: acid[0].x, y: acid[0].y, sx: acid[0].x, sy: acid[0].y, tx: wt.x + 10, ty: wt.y + 6, grp: 'liq', mol: m });
+      atoms.push({ el: 'Cl', x: acid[1].x, y: acid[1].y, sx: acid[1].x, sy: acid[1].y, tx: nc.x + 9, ty: nc.y, grp: 'liq', mol: m });
+    }
+  }
+}
+
+// ============================================================
+// レイアウト
+// ============================================================
+function layout() {
+  const W = canvasW, H = canvasH;
+  const counterH = 52;             // 下部カウンター帯
+  const mainH = H - counterH;
+  if (scene === 1) {
+    const cx = W * 0.5, baseY = mainH * 0.88;
+    return {
+      counterY: H - counterH, mainH,
+      pivot: { x: cx, y: mainH * 0.30 },
+      armLen: W * 0.27,
+      baseY,
+      // 皿の上のウール位置（粒子をウールの絵に重ねる）
+      leftPan: { x: cx - W * 0.27, y: mainH * 0.30 + 26, r: 30 },
+      rightPan: { x: cx + W * 0.27, y: mainH * 0.30 + 26, r: 30 },
+    };
+  }
+  if (scene === 2) {
+    const sx = W * 0.46, sy = mainH * 0.84;
+    const r = Math.min(80, mainH * 0.24);
+    const flask = { x: sx, y: sy - 16 - r, r };  // 底が台の皿にほぼ接地
+    return {
+      counterY: H - counterH, mainH,
+      scale: { x: sx, y: sy, w: 240, h: 26 },
+      flask,
+      flaskWool: { x: flask.x, y: flask.y + flask.r * 0.42, r: 36 },
+    };
+  }
+  if (scene === 3) {
+    const sx = W * 0.44, sy = mainH * 0.84;
+    const bkH = Math.min(130, mainH * 0.40);
+    const bk = { x: sx - 50, y: sy - 13 - bkH / 2, w: 190, h: bkH };  // 台の上に接地
+    return {
+      counterY: H - counterH, mainH,
+      scale: { x: sx, y: sy, w: 320, h: 26 },
+      beaker: { x: bk.x, y: bk.y, w: bk.w, h: bk.h, topY: bk.y - bk.h / 2, botY: bk.y + bk.h / 2 },
+      smallBeaker: { x: sx + 130, y: sy - 13 - 32, w: 86, h: 64 },  // 同じ台の上
+    };
+  }
+  // scene 4
+  const sx = W * 0.46, sy = mainH * 0.84;
+  const btH = Math.min(200, mainH * 0.58);
+  const bt = { x: sx, y: sy - 13 - btH / 2, w: 170, h: btH };  // 台の上に接地
+  const botY = bt.y + bt.h / 2, topY = bt.y - bt.h / 2;
+  return {
+    counterY: H - counterH, mainH,
+    scale: { x: sx, y: sy, w: 280, h: 26 },
+    bottle: { x: bt.x, y: bt.y, w: bt.w, h: bt.h, topY, botY, liqY: botY - 74, gasY: topY + 58 },
+    vial: { x: bt.x + 34, y: botY - 96 },
+  };
+}
+
+// ============================================================
+// p5 ライフサイクル
+// ============================================================
+function fitCanvas() {
+  const host = document.getElementById('canvas-host');
+  const w = Math.min(880, host.clientWidth || 880);
+  if (Math.abs(w - canvasW) < 5) return false;
+  const h = Math.round(w * 0.56);
+  canvasW = w; canvasH = h;
+  resizeCanvas(w, h);
+  buildAtoms();
+  return true;
+}
+function setup() {
+  const host = document.getElementById('canvas-host');
+  const w = Math.min(880, host.clientWidth || 880);
+  const h = Math.round(w * 0.56);
+  canvasW = w; canvasH = h;
+  const c = createCanvas(w, h);
+  c.parent('canvas-host');
+  frameRate(60);
+  textFont('M PLUS Rounded 1c');
+  buildSceneUI();
+  resetScene();
+  // コンテナ幅変化に追従（setup時はまだ幅が定まらないことがある）
+  new ResizeObserver(() => fitCanvas()).observe(host);
+}
+function windowResized() {
+  fitCanvas();
+}
+
+function draw() {
+  // コンテナ幅とのズレを補正（ResizeObserverが取りこぼす環境への保険）
+  // 起動直後はレイアウト確定が遅れることがあるため毎フレーム、以後は毎秒チェック
+  if (frameCount < 300 || frameCount % 60 === 1) fitCanvas();
+  background(255, 251, 240);
+
+  // 進行更新
+  if (phase === 'reacting') {
+    animT = Math.min(1, animT + 0.008);
+    if (animT >= 1) { finishReaction(); }
+  }
+  if (phase === 'opening') {
+    openT = Math.min(1, openT + 0.007);
+    if (openT >= 1) { phase = 'opened'; showOpenedResult(); }
+  }
+  if (flashT > 0) flashT -= 0.04;
+
+  if (scene === 1) drawScene1();
+  else if (scene === 2) drawScene2();
+  else if (scene === 3) drawScene3();
+  else if (scene === 4) drawScene4();
+
+  drawCounterBand();
+  drawResultBanner();
+}
+
+// ============================================================
+// 共通パーツ
+// ============================================================
+const easeIO = t => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+
+function wobble(i) { return Math.sin(frameCount * 0.05 + i * 1.7) * 1.5; }
+
+function drawAtom(el, x, y, alpha = 255, scl = 1) {
+  const e = ELEM[el];
+  noStroke();
+  fill(red(color(e.c)), green(color(e.c)), blue(color(e.c)), alpha);
+  circle(x, y, e.r * 2 * scl);
+  stroke(58, 53, 48, alpha * 0.5); strokeWeight(1); noFill();
+  circle(x, y, e.r * 2 * scl);
+  noStroke();
+  fill(e.tc === '#fff' ? color(255, 255, 255, alpha) : color(120, 105, 60, alpha));
+  textAlign(CENTER, CENTER); textStyle(BOLD);
+  textSize(e.r * scl * (e.label.length > 1 ? 0.85 : 1.05));
+  text(e.label, x, y + 0.5);
+  textStyle(NORMAL);
+}
+
+// 反応中の原子位置: sx,sy → tx,ty を animT でトゥイーン
+function atomPos(a) {
+  let t = 0;
+  if (phase === 'reacting') t = easeIO(animT);
+  else if (phase === 'done' || phase === 'opening' || phase === 'opened') t = 1;
+  let x = lerp(a.sx, a.tx, t), y = lerp(a.sy, a.ty, t);
+  // シーン2 ふた開け: 酸素は口（上）から入り、首を通って中のFeへ降りる（横の壁を通らない）
+  if (scene === 2 && scene2Open && a.grp === 'air' && t > 0) {
+    const L = layout();
+    const mouthY = L.flask.y - L.flask.r - 30;     // 口（首の入口）
+    const gateX = L.flask.x + (a.gx || 0);
+    // 分子ごとに時間差で入る（口で重ならないよう、1組ずつ順番に）
+    const stagger = (a.pair || 0) * 0.16;
+    const tp = constrain((t - stagger) / (1 - stagger), 0, 1);
+    if (tp < 0.45) {
+      // 区間1: 空気中 → 口へ集まる
+      const s = tp / 0.45;
+      x = lerp(a.sx, gateX, s);
+      y = lerp(a.sy, mouthY, s);
+    } else {
+      // 区間2: 口 → 中のFeへ。まず首をまっすぐ降りてから横に広がる（2次ベジェ）
+      const s = (tp - 0.45) / 0.55;
+      x = gateX * (1 - s * s) + a.tx * s * s;
+      y = mouthY * (1 - s) * (1 - s) + a.ty * (1 - (1 - s) * (1 - s));
+    }
+    return { x: x + wobble(a.sx + a.sy) * 0.4, y: y + wobble(a.sy) * 0.3 };
+  }
+  // シーン4 ふた開け: gasグループはビンの「口」から上に出て、それから右上の「空気中」へ流れる
+  // （壁をすり抜けないよう2区間経路。画面外に消すと「なくなった」ように見えるため、にげた先でも存在を見せる）
+  if (scene === 4 && (phase === 'opening' || phase === 'opened') && a.grp === 'gas') {
+    const L = layout();
+    const mol = a.mol || 0;
+    // 分子ごとに遅らせて、1つずつ順番に出ていく（同時に飛ぶと空中で重なるため）
+    const esc = easeIO(constrain(openT * 1.9 - mol * 0.3, 0, 1));
+    // 経路は「分子の中心」で計算し、原子の分子内オフセットは保持（形がつぶれない）
+    const off = a.tx - a.mcx;
+    const spread = a.mcx - L.bottle.x;
+    const neckX = L.bottle.x + spread * 0.2 + off;
+    const neckY = L.bottle.topY - 26;
+    const finalX = canvasW - 80 + spread * 0.6 + off;
+    const finalY = L.counterY * 0.26 + mol * L.counterY * 0.16;
+    if (esc < 0.5) {
+      // 区間1: 気体空間 → 口の真上（ビンの中を上昇して口から出る）
+      x = lerp(a.tx, neckX, esc / 0.5);
+      y = lerp(a.ty, neckY, esc / 0.5);
+    } else {
+      // 区間2: 口の高さのまま右へ流れ、壁を越えてから下りる（2次ベジェでガラスを避ける）
+      const s = (esc - 0.5) / 0.5;
+      const cx = L.bottle.x + L.bottle.w / 2 + 40;
+      x = (1 - s) * (1 - s) * neckX + 2 * (1 - s) * s * cx + s * s * finalX;
+      y = neckY + s * s * (finalY - neckY);
+    }
+  }
+  return { x: x + wobble(a.sx + a.sy) * 0.4, y: y + wobble(a.sy) * 0.3 };
+}
+
+function drawAtoms(filterFn) {
+  for (const a of atoms) {
+    if (filterFn && !filterFn(a)) continue;
+    const p = atomPos(a);
+    drawAtom(a.el, p.x, p.y);
+  }
+}
+
+// デジタル電子てんびん
+function drawDigitalScale(x, y, w, valueStr, blink = false) {
+  rectMode(CENTER);
+  noStroke();
+  fill('#D8D2C2'); rect(x, y + 4, w, 20, 6);          // 台座
+  fill('#C8C2B0'); rect(x, y - 8, w * 0.96, 10, 4);    // 上皿プレート
+  // 表示部
+  fill('#5A554A'); rect(x, y + 22, w * 0.6, 24, 6);
+  fill(blink && frameCount % 30 < 6 ? '#9FE8B0' : '#C7F2D0');
+  rect(x, y + 22, w * 0.6 - 8, 17, 4);
+  fill('#2A4A30'); textAlign(CENTER, CENTER); textStyle(BOLD); textSize(14);
+  text(valueStr, x, y + 22);
+  textStyle(NORMAL);
+  rectMode(CORNER);
+}
+
+// 結果バナー（狭い画面では文字を縮め、💡ボタンと重なるなら下の段へ）
+function drawResultBanner() {
+  if (phase !== 'done' && phase !== 'opened') return;
+  const msg = bannerMsg();
+  if (!msg) return;
+  let ts = 15;
+  textSize(ts); textStyle(BOLD);
+  let tw = textWidth(msg.text) + 44;
+  const maxW = canvasW - 20;
+  if (tw > maxW) {
+    ts = Math.max(10.5, ts * maxW / tw);
+    textSize(ts);
+    tw = textWidth(msg.text) + 36;
+  }
+  const bx = canvasW / 2;
+  const by = (bx - tw / 2 < 126) ? 58 : 26;   // 左上の💡かいせつボタンを避ける
+  rectMode(CENTER);
+  noStroke(); fill(255, 251, 240, 235);
+  stroke(msg.col); strokeWeight(2.5);
+  rect(bx, by, tw, 36, 999);
+  noStroke(); fill(msg.col);
+  textAlign(CENTER, CENTER);
+  text(msg.text, bx, by);
+  rectMode(CORNER); textStyle(NORMAL);
+}
+function bannerMsg() {
+  if (scene === 1) return { text: '⚖️ もやした方が 下がった！', col: '#D97A4B' };
+  if (scene === 2) {
+    if (scene2Open) return { text: '🔥 ふえた！ 84.00 g → 84.80 g', col: '#D97A4B' };
+    return { text: '✨ 変わらない！ 85.32 g → 85.32 g', col: '#4CB780' };
+  }
+  if (scene === 3) return { text: '✨ 変わらない！ 127.45 g → 127.45 g', col: '#4CB780' };
+  if (scene === 4) {
+    if (phase === 'opened') return { text: '😲 へった！ 58.00 g → 57.40 g', col: '#E8849C' };
+    return { text: '✨ 変わらない！ 58.00 g → 58.00 g（密閉中）', col: '#4CB780' };
+  }
+  return null;
+}
+
+// ============================================================
+// シーン1: 上皿てんびん + スチールウール（開放）
+// ============================================================
+function drawScene1() {
+  const L = layout();
+  const t = (phase === 'reacting') ? easeIO(animT) : (phase === 'done' ? 1 : 0);
+  const burnGlow = (phase === 'reacting') ? Math.sin(animT * Math.PI) : 0;
+  const tilt = t * 0.09; // ラジアン: 右が下がる
+
+  push();
+  translate(L.pivot.x, L.pivot.y);
+
+  // 支柱と台
+  noStroke(); fill('#B89A6A');
+  rectMode(CENTER);
+  rect(0, (L.baseY - L.pivot.y) / 2 + 10, 14, L.baseY - L.pivot.y + 4, 4);
+  rect(0, L.baseY - L.pivot.y + 8, 150, 14, 6);
+  // 腕
+  push();
+  rotate(tilt);
+  fill('#8a7a60'); rect(0, 0, L.armLen * 2, 8, 4);
+  // 皿(左右) — 腕の端から吊るす
+  for (const side of [-1, 1]) {
+    const px = side * L.armLen;
+    stroke('#8a7a60'); strokeWeight(2);
+    line(px - 22, 4, px - 30, 38); line(px + 22, 4, px + 30, 38);
+    noStroke(); fill('#D8CCA8');
+    ellipse(px, 44, 96, 16);
+    // スチールウール
+    const burned = (side === 1) ? t : 0;
+    drawWoolAt(px, 30, 30, burned, side === 1 ? burnGlow : 0);
+  }
+  pop();
+  // 支点かざり
+  fill('#6a5a40'); triangle(-12, 2, 12, 2, 0, -14);
+  rectMode(CORNER);
+  pop();
+
+  // ラベル（粒子と重ならないよう、皿のじゅうぶん下に）
+  noStroke(); fill('#8a7a60'); textAlign(CENTER, TOP); textSize(12);
+  text('スチールウール（鉄）', L.pivot.x - L.armLen, L.pivot.y + 92 - t * L.armLen * 0.09);
+  text(phase === 'predict' || phase === 'ready' ? 'こちらを もやす よ' : 'もやした（酸化鉄）', L.pivot.x + L.armLen, L.pivot.y + 92 + t * L.armLen * 0.09);
+
+  // 火の粉
+  updateSparks();
+
+  // 粒子モード: 空気中のO2 → 鉄へ
+  if (particleView) {
+    if (phase !== 'done') drawAirLabel(canvasW * 0.33, L.pivot.y + 22, '空気中の酸素 O₂');
+    drawAtoms();
+  } else if (phase === 'predict' || phase === 'ready') {
+    hintGhost('🔬にすると「空気の正体」が見えるよ');
+  }
+}
+
+function drawWoolAt(x, y, r, burnedT, glow) {
+  // もこもこ円集合
+  const n = 8;
+  for (let i = 0; i < n; i++) {
+    const ang = i / n * Math.PI * 2;
+    const rr = r * (0.55 + 0.18 * Math.sin(i * 2.3));
+    const wx = x + Math.cos(ang) * rr, wy = y + Math.sin(ang) * rr * 0.7 - 6;
+    const base = lerpColor(color('#A8ACB2'), color('#3A3530'), burnedT);
+    const c = (glow > 0) ? lerpColor(base, color('#FF8C42'), glow * 0.8) : base;
+    noStroke(); fill(c);
+    circle(wx, wy, r * 0.75);
+  }
+  const cc = lerpColor(color('#B8BCC2'), color('#4A4540'), burnedT);
+  fill(glow > 0 ? lerpColor(cc, color('#FFB066'), glow * 0.8) : cc);
+  circle(x, y - 6, r * 1.05);
+}
+
+function updateSparks() {
+  if (phase === 'reacting' && frameCount % 3 === 0 && (scene === 1 || scene === 2)) {
+    const L = layout();
+    const o = (scene === 1)
+      ? { x: L.pivot.x + L.armLen, y: L.pivot.y + 20 }
+      : L.flaskWool;
+    sparks.push({ x: o.x + jitter(30), y: o.y + jitter(10) - 10, vy: -0.5 - Math.random(), life: 1 });
+  }
+  for (const s of sparks) {
+    s.y += s.vy; s.x += jitter(1); s.life -= 0.02;
+    noStroke(); fill(255, 140 + Math.random() * 60, 60, s.life * 255);
+    circle(s.x, s.y, 3 + Math.random() * 2);
+  }
+  sparks = sparks.filter(s => s.life > 0);
+}
+
+function drawArrow(x1, y1, x2, y2) {
+  line(x1, y1, x2, y2);
+  const a = atan2(y2 - y1, x2 - x1);
+  push(); translate(x2, y2); rotate(a);
+  line(0, 0, -10, -5); line(0, 0, -10, 5);
+  pop();
+}
+
+function drawAirLabel(x, y, s) {
+  noStroke(); fill('#E05B5B'); textAlign(LEFT, CENTER); textSize(12); textStyle(BOLD);
+  text(s, x, y);
+  textStyle(NORMAL);
+}
+
+function hintGhost(s) {
+  noStroke(); fill(150, 135, 110, 140); textAlign(CENTER, CENTER); textSize(12);
+  text(s, canvasW / 2, canvasH * 0.10);
+}
+
+// ============================================================
+// シーン2: 密閉フラスコ
+// ============================================================
+function drawScene2() {
+  const L = layout();
+  const t = (phase === 'reacting') ? easeIO(animT) : (phase === 'done' ? 1 : 0);
+  const burnGlow = (phase === 'reacting') ? Math.sin(animT * Math.PI) : 0;
+
+  // 電子てんびん（密閉=変わらず85.32 / ふた開け=84.00→84.80に増える）
+  let massStr = '85.32 g';
+  if (scene2Open) massStr = (84.00 + 0.80 * t).toFixed(2) + ' g';
+  drawDigitalScale(L.scale.x, L.scale.y, L.scale.w, massStr, phase === 'reacting');
+
+  // フラスコ(丸底)
+  const F = L.flask;
+  // 首
+  noStroke(); fill(232, 242, 248, particleView ? 120 : 200);
+  rectMode(CENTER);
+  rect(F.x, F.y - F.r - 18, 34, 48, 4);
+  if (!scene2Open) {
+    // ゴム栓（密閉版のみ）
+    fill('#D97A4B'); rect(F.x, F.y - F.r - 44, 40, 16, 4);
+    fill('#B05A30'); rect(F.x, F.y - F.r - 52, 32, 8, 3);
+  }
+  rectMode(CORNER);
+  // 本体
+  fill(232, 242, 248, particleView ? 110 : 190);
+  circle(F.x, F.y, F.r * 2);
+  stroke('#9ab8cc'); strokeWeight(2.5); noFill();
+  circle(F.x, F.y, F.r * 2);
+  const neckTop = scene2Open ? F.y - F.r - 36 : F.y - F.r - 42;
+  line(F.x - 17, neckTop, F.x - 17, F.y - F.r + 14);
+  line(F.x + 17, neckTop, F.x + 17, F.y - F.r + 14);
+  if (scene2Open) { // 開いた口（上ふち）
+    stroke('#9ab8cc'); strokeWeight(2.5);
+    arc(F.x, neckTop, 34, 9, PI, TWO_PI);
+  }
+  noStroke();
+
+  // 中のスチールウール
+  drawWoolAt(L.flaskWool.x, L.flaskWool.y, L.flaskWool.r, t, burnGlow);
+  updateSparks();
+
+  // ラベル
+  fill('#8a7a60'); textAlign(LEFT, CENTER); textSize(12);
+  if (scene2Open) {
+    // 「ふたを開けてある」は結果バナーと重なるので予想中だけ表示
+    if (phase === 'predict' || phase === 'ready') {
+      fill('#D97A4B'); textStyle(BOLD);
+      text('↑ ふたを開けてある', F.x + 26, neckTop - 4);
+      textStyle(NORMAL); fill('#8a7a60');
+    }
+  } else {
+    text('← ゴム栓で 密閉！', F.x + 30, F.y - F.r - 44);
+  }
+  if (!particleView) {
+    textAlign(LEFT, CENTER);
+    text('スチールウール\n（鉄）＋ 酸素', F.x + F.r + 18, F.y + 8);
+  }
+
+  // 粒子モード
+  if (particleView) {
+    // ふた開け版: 反応中は外の酸素が口へ「上から」入っていく矢印
+    if (scene2Open && phase === 'reacting' && neckTop > 34) {
+      stroke('#E05B5B'); strokeWeight(2.5);
+      drawArrow(F.x, neckTop - 26, F.x, neckTop - 4);
+      noStroke();
+    }
+    drawAtoms();
+    noStroke(); textSize(11.5); textStyle(BOLD); textAlign(CENTER, TOP);
+    if (scene2Open) {
+      fill('#D97A4B');
+      const msg = (phase === 'done') ? '酸素が結びついて ふえた！' : '↓ 酸素が 口から入る';
+      text(msg, F.x, F.y - F.r + 10);
+    } else {
+      fill('#4A7BAA');
+      text('酸素もぜんぶ フラスコの中！', F.x, F.y - F.r + 10);
+    }
+    textStyle(NORMAL);
+  } else if (phase === 'predict' || phase === 'ready') {
+    hintGhost(scene2Open ? '🔬にすると 外の酸素の動きが見えるよ' : '🔬にすると フラスコの中の気体が見えるよ');
+  }
+}
+
+// ============================================================
+// シーン3: 沈殿（硫酸 + 水酸化バリウム）
+// ============================================================
+function drawScene3() {
+  const L = layout();
+  const t = (phase === 'reacting') ? easeIO(animT) : (phase === 'done' ? 1 : 0);
+
+  drawDigitalScale(L.scale.x, L.scale.y, L.scale.w, '127.45 g', phase === 'reacting');
+
+  const B = L.beaker;
+  // ビーカー(大): うすい硫酸
+  drawBeakerShape(B.x, B.y, B.w, B.h, color(235, 244, 250, particleView ? 90 : 165));
+  // 白濁(反応が進むと液がうっすら白く)
+  if (t > 0) {
+    noStroke(); fill(255, 255, 255, 90 * t);
+    rectMode(CENTER); rect(B.x, B.y + B.h * 0.12, B.w - 14, B.h * 0.66, 8); rectMode(CORNER);
+  }
+  // 沈殿(見た目モード): 底に白い山（縁取りで白い液に埋もれないように）
+  if (!particleView && t > 0.35) {
+    const pt = Math.min(1, (t - 0.35) / 0.65);
+    stroke('#C0B498'); strokeWeight(1.5); fill(252, 252, 250, 245);
+    const baseY = B.botY - 6;
+    ellipse(B.x - 30, baseY, 70 * pt, 16 * pt);
+    ellipse(B.x + 26, baseY, 80 * pt, 18 * pt);
+    ellipse(B.x, baseY - 2, 90 * pt, 14 * pt);
+    noStroke();
+    if (pt > 0.7) {
+      fill('#6a5a40'); textSize(11); textStyle(BOLD); textAlign(CENTER, CENTER);
+      text('↓ 白い沈殿（硫酸バリウム）', B.x, B.botY - 46);
+      textStyle(NORMAL);
+    }
+  }
+
+  // 小ビーカー: 水酸化バリウム水溶液 → 持ち上げて注ぐ → 空になって戻る
+  const S = L.smallBeaker;
+  const lift = (phase === 'reacting') ? easeIO(Math.min(1, animT * 2.5)) : 0;
+  const emptied = (phase === 'done') || (phase === 'reacting' && animT > 0.55);
+  const bx = (phase === 'done') ? S.x : lerp(S.x, B.x + B.w * 0.42, lift);
+  const by = (phase === 'done') ? S.y : lerp(S.y, B.topY - 40, lift);
+  push();
+  translate(bx, by);
+  rotate((phase === 'done') ? 0 : -lift * 1.0);
+  drawBeakerShape(0, 0, S.w, S.h, color(238, 248, 240, particleView ? 90 : 175), emptied ? 0 : 1);
+  pop();
+  // 注ぎの液流
+  if (phase === 'reacting' && animT > 0.12 && animT < 0.55) {
+    stroke(190, 226, 205, 200); strokeWeight(5);
+    line(bx - S.w * 0.40, by + 4, B.x + B.w * 0.18, B.topY + 12);
+    noStroke();
+  }
+
+  // ラベル（注ぎ中の小ビーカーと重ならない位置に）
+  noStroke(); fill('#8a7a60'); textSize(12); textAlign(CENTER, TOP);
+  text('うすい硫酸', B.x - B.w / 2 + 6, B.topY - 24);
+  text(emptied ? '（注ぎおわった）' : '水酸化バリウム水溶液', S.x + 14, S.y - S.h * 0.5 - 26);
+
+  // 粒子モード
+  if (particleView) {
+    drawAtoms();
+    if (phase === 'done') {
+      fill('#4CB780'); textSize(12); textStyle(BOLD); textAlign(CENTER, CENTER);
+      text('原子の組み合わせが 変わっただけ！', canvasW / 2, L.counterY - 16);
+      textStyle(NORMAL);
+    }
+  } else if (phase === 'predict' || phase === 'ready') {
+    hintGhost('🔬にすると 水溶液の中の粒子が見えるよ');
+  }
+}
+
+function drawBeakerShape(cx, cy, w, h, liqCol, fillLevel = 1) {
+  rectMode(CENTER);
+  // 液
+  if (fillLevel > 0) {
+    noStroke(); fill(liqCol);
+    rect(cx, cy + h * 0.1, w - 8, h * 0.72 * fillLevel, 6);
+  }
+  // ガラス
+  stroke('#9ab8cc'); strokeWeight(2.5); noFill();
+  line(cx - w / 2, cy - h / 2, cx - w / 2, cy + h / 2 - 6);
+  line(cx + w / 2, cy - h / 2, cx + w / 2, cy + h / 2 - 6);
+  arc(cx, cy + h / 2 - 6, w, 14, 0, PI);
+  noStroke();
+  rectMode(CORNER);
+}
+
+// ============================================================
+// シーン4: 密閉ビン → ふたをあける
+// ============================================================
+function drawScene4() {
+  const L = layout();
+  const t = (phase === 'reacting') ? easeIO(animT) : (phase !== 'predict' && phase !== 'ready' ? 1 : 0);
+  const B = L.bottle;
+
+  // てんびん値
+  let massStr = '58.00 g';
+  if (phase === 'opening') massStr = (58.00 - 0.60 * easeIO(openT)).toFixed(2) + ' g';
+  if (phase === 'opened') massStr = '57.40 g';
+  drawDigitalScale(L.scale.x, L.scale.y, L.scale.w, massStr, phase === 'reacting' || phase === 'opening');
+
+  // ビン本体
+  rectMode(CENTER);
+  noStroke(); fill(236, 244, 250, particleView ? 100 : 175);
+  rect(B.x, B.y, B.w, B.h, 14);
+  // 液体(うすい塩酸+反応液)
+  fill(222, 240, 230, particleView ? 110 : 200);
+  rect(B.x, (B.liqY + B.botY) / 2, B.w - 10, B.botY - B.liqY - 5, 8);
+  // 底の白い粉(炭酸水素ナトリウム) — 反応で減る
+  if (t < 1) {
+    fill(252, 252, 250, 235 * (1 - t));
+    ellipse(B.x, B.botY - 8, (B.w - 30) * (1 - t * 0.6), 16 * (1 - t * 0.5));
+  }
+  // ガラス枠
+  stroke('#9ab8cc'); strokeWeight(2.5); noFill();
+  rect(B.x, B.y, B.w, B.h, 14);
+  noStroke();
+  // ふた（飛び先は上端で切れないようクランプ）
+  const lidOff = (phase === 'opening' || phase === 'opened') ? easeIO(Math.min(1, openT * 2.5)) : 0;
+  fill('#D97A4B');
+  rect(B.x + lidOff * 95, Math.max(48, B.topY - 8 - lidOff * 30), 64, 16, 5);
+  rectMode(CORNER);
+  if (phase === 'opening' && openT < 0.4) {
+    noStroke(); fill('#E8849C'); textSize(15); textStyle(BOLD); textAlign(CENTER, CENTER);
+    text('ポンッ！', B.x + 70, Math.max(16, B.topY - 36));
+    textStyle(NORMAL);
+  }
+
+  // 中の小容器(塩酸入り試験管) — 傾く
+  push();
+  translate(L.vial.x, L.vial.y);
+  rotate((phase === 'predict' || phase === 'ready') ? 0 : Math.min(1, t * 2.2) * 1.45);
+  stroke('#9ab8cc'); strokeWeight(2); noFill();
+  rect(-9, -26, 18, 50, 5);
+  noStroke(); fill(212, 234, 246, 210);
+  if (t < 0.5) rect(-7, -2, 14, 23, 4);
+  pop();
+
+  // 泡(見た目モード)
+  if (!particleView) updateBubbles(L);
+
+  // ラベル（反応前のみ。反応後は中身が変わっているので出さない）
+  if (phase === 'predict' || phase === 'ready') {
+    noStroke(); fill('#8a7a60'); textSize(12); textAlign(CENTER, TOP);
+    text('炭酸水素ナトリウム', B.x - B.w / 2 - 64, B.botY - 30);
+    text('うすい塩酸', B.x + B.w / 2 + 48, L.vial.y - 38);
+    textSize(11); text('ふたで 密閉した ビン', B.x, B.topY - 34);
+  }
+
+  // 粒子モード
+  if (particleView) {
+    drawAtoms();
+    if ((phase === 'done')) {
+      fill('#4A7BAA'); textSize(11.5); textStyle(BOLD); textAlign(CENTER, TOP);
+      text('CO₂ も まだ ビンの中！', B.x, B.gasY - 40);
+      textStyle(NORMAL);
+    }
+    if (phase === 'opened') {
+      fill('#E8849C'); textSize(11.5); textStyle(BOLD); textAlign(RIGHT, TOP);
+      text('↑ にげた CO₂\n（きえてはいない！）', canvasW - 14, L.counterY * 0.58 + 22);
+      textStyle(NORMAL);
+    }
+  } else if (phase === 'predict' || phase === 'ready') {
+    hintGhost('🔬にすると 出てくる気体の正体が見えるよ');
+  }
+}
+
+function updateBubbles(L) {
+  const B = L.bottle;
+  const active = (phase === 'reacting' && animT > 0.15);
+  if (active && frameCount % 4 === 0) {
+    bubbles.push({ x: B.x + jitter(B.w - 50), y: B.botY - 20, vy: -(0.8 + Math.random()), r: 3 + Math.random() * 4, life: 1 });
+  }
+  // ふた開け後: 上の気体が逃げる表現(小さい泡が口から)
+  if ((phase === 'opening') && frameCount % 5 === 0) {
+    bubbles.push({ x: B.x + jitter(30), y: B.topY + 6, vy: -(1.5 + Math.random()), r: 2.5 + Math.random() * 3, life: 1, esc: true });
+  }
+  for (const b of bubbles) {
+    b.y += b.vy;
+    if (!b.esc && b.y < L.bottle.liqY + 6 && phase !== 'opening' && phase !== 'opened') {
+      // 液面上の空間にとどまる
+      b.y = L.bottle.liqY + 6 + jitter(3); b.vy = 0; b.life -= 0.008;
+    } else {
+      b.life -= 0.012;
+    }
+    stroke(255, 255, 255, 200 * b.life); strokeWeight(1.5);
+    fill(245, 252, 255, 120 * b.life);
+    circle(b.x, b.y, b.r * 2);
+  }
+  noStroke();
+  bubbles = bubbles.filter(b => b.life > 0);
+}
+
+// ============================================================
+// 原子カウンター帯
+// ============================================================
+function countAtoms() {
+  const counts = {};
+  let escaped = {};
+  for (const a of atoms) {
+    const isEsc = (scene === 4 && (phase === 'opened') && a.grp === 'gas');
+    const bag = isEsc ? escaped : counts;
+    bag[a.el] = (bag[a.el] || 0) + 1;
+  }
+  return { counts, escaped };
+}
+
+function drawCounterBand() {
+  const L = layout();
+  const y0 = L.counterY;
+  noStroke(); fill('#F4EDDA');
+  rect(0, y0, canvasW, canvasH - y0);
+  stroke('#E0D4B4'); strokeWeight(1.5);
+  line(0, y0, canvasW, y0);
+  noStroke();
+
+  // 見た目モードでは原子情報を見せない（🔬スイッチの価値を立てる導線だけ）
+  if (!particleView) {
+    fill('#9a8a70'); textSize(11.5); textStyle(BOLD); textAlign(CENTER, CENTER);
+    text('🔬「粒子」スイッチを入れると、原子の種類と数をカウントできるよ！', canvasW / 2, y0 + 26);
+    textStyle(NORMAL);
+    return;
+  }
+
+  // ---- アイテム列を組み立て、幅が足りなければ自動で2行目に折り返す ----
+  const items = [];
+  const label = (s, col = '#6a5a40', bold = true, size = 10.5) => items.push({ k: 'label', s, col, bold, size });
+  const chip = (el, n, esc = false) => items.push({ k: 'chip', el, n, esc });
+
+  if (scene === 1) {
+    label('左の皿:');
+    chip('Fe', 6);
+    label('もやす皿:');
+    chip('Fe', 6);
+    if (phase === 'done') {
+      chip('O', 6);
+      label('← 空気から O が結びついた！', '#D97A4B', true, 11.5);
+    } else {
+      label('（空気中に O₂ がただよっている）', '#9a8a70', false, 10.5);
+    }
+  } else if (scene === 2 && scene2Open) {
+    label('🔢 フラスコの中:', '#8a7a60', true, 11);
+    chip('Fe', 6);
+    if (phase === 'done') {
+      chip('O', 6);
+      label('← 酸素が外から入って ふえた！', '#D97A4B', true, 11.5);
+    } else {
+      label('（酸素 O₂ はまだフラスコの外）', '#9a8a70', false, 10.5);
+    }
+  } else {
+    const { counts, escaped } = countAtoms();
+    const order = ['Fe', 'O', 'H', 'S', 'Ba', 'Na', 'C', 'Cl'].filter(e => (counts[e] || escaped[e]));
+    const hasEsc = Object.keys(escaped).length > 0;
+    if (!hasEsc) {
+      label('🔢 原子:', '#8a7a60', true, 11);
+      for (const el of order) chip(el, counts[el] || 0);
+      if (phase === 'done' || phase === 'opened') label('→ 反応の前後で 種類も数も そのまま！', '#4CB780', true, 12);
+    } else {
+      label('ビンの中:');
+      for (const el of order) if (counts[el]) chip(el, counts[el]);
+      label('にげた:', '#E8849C');
+      for (const el of ['C', 'O']) if (escaped[el]) chip(el, escaped[el], true);
+      label('合計はへってない！＝質量保存', '#4CB780', true, 11.5);
+    }
+  }
+
+  const widthOf = it => {
+    if (it.k === 'chip') return 57;
+    textSize(it.size); textStyle(it.bold ? BOLD : NORMAL);
+    const w = textWidth(it.s) + 10;
+    textStyle(NORMAL);
+    return w;
+  };
+  // 行数を先に数えて、1行なら帯の中央、2行なら上下に振り分ける
+  let rows = 1, px = 12;
+  for (const it of items) {
+    const w = widthOf(it);
+    if (px + w > canvasW - 10) { rows = 2; px = 12; }
+    px += w;
+  }
+  let x = 12, cy = (rows === 1) ? y0 + 26 : y0 + 13;
+  for (const it of items) {
+    const w = widthOf(it);
+    if (x + w > canvasW - 10) { x = 12; cy = y0 + 39; }
+    if (it.k === 'chip') {
+      drawCountChip(x, cy, it.el, it.n, it.esc);
+    } else {
+      fill(it.col); textSize(it.size); textStyle(it.bold ? BOLD : NORMAL); textAlign(LEFT, CENTER);
+      text(it.s, x, cy);
+      textStyle(NORMAL);
+    }
+    x += w;
+  }
+}
+
+function drawCountChip(x, cy, el, n, escaped = false) {
+  const e = ELEM[el];
+  const w = 52;
+  rectMode(CORNER);
+  noStroke();
+  fill(escaped ? '#FBE8EE' : '#FFFBF0');
+  stroke(escaped ? '#E8849C' : '#D8CCA8'); strokeWeight(1.5);
+  rect(x, cy - 13, w, 26, 999);
+  noStroke();
+  drawAtomMini(el, x + 14, cy);
+  fill('#3A3530'); textSize(12); textStyle(BOLD); textAlign(LEFT, CENTER);
+  text('×' + n, x + 25, cy);
+  textStyle(NORMAL);
+  return x + w + 5;
+}
+function drawAtomMini(el, x, y) {
+  const e = ELEM[el];
+  noStroke(); fill(e.c); circle(x, y, 17);
+  fill(e.tc === '#fff' ? 255 : color(120, 105, 60));
+  textAlign(CENTER, CENTER); textSize(e.label.length > 1 ? 7.5 : 9.5); textStyle(BOLD);
+  text(e.label, x, y + 0.5);
+  textStyle(NORMAL);
+}
+
+// ============================================================
+// UI 制御
+// ============================================================
+function buildSceneUI() {
+  const sc = activeConfig();
+  document.getElementById('predict-label').textContent = sc.predictLabel;
+  const box = document.getElementById('predict-btns');
+  box.innerHTML = '';
+  for (const op of sc.options) {
+    const b = document.createElement('button');
+    b.textContent = op.label;
+    b.dataset.key = op.key;
+    b.addEventListener('click', () => selectPrediction(op.key, b));
+    box.appendChild(b);
+  }
+  document.getElementById('action-btn').textContent = sc.action;
+  document.getElementById('exp-title').textContent = EXPLAIN[scene].title;
+  document.getElementById('exp-body').innerHTML = EXPLAIN[scene].body;
+}
+
+function selectPrediction(key, btn) {
+  if (phase !== 'predict' && phase !== 'ready') return;
+  prediction = key;
+  document.querySelectorAll('#predict-btns button').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  phase = 'ready';
+  document.getElementById('action-btn').disabled = false;
+}
+
+function startReaction() {
+  if (phase !== 'ready') return;
+  phase = 'reacting';
+  animT = 0;
+  document.getElementById('action-btn').disabled = true;
+  document.querySelectorAll('#predict-btns button').forEach(b => b.disabled = true);
+}
+
+function finishReaction() {
+  phase = 'done';
+  const sc = activeConfig();
+  const hit = (prediction === sc.answer);
+  const rb = document.getElementById('result-box');
+  const v = document.getElementById('result-verdict');
+  v.textContent = hit ? '🎯 よそう的中！' : '😲 よそうと ちがった！';
+  v.className = 'verdict ' + (hit ? 'hit' : 'miss');
+  document.getElementById('result-fact').innerHTML = sc.resultFact;
+  rb.classList.add('show');
+  const nh = document.getElementById('next-hint');
+  nh.innerHTML = sc.nextHint;
+  nh.classList.add('show');
+  // 正解の選択肢をハイライト
+  document.querySelectorAll('#predict-btns button').forEach(b => {
+    if (b.dataset.key === sc.answer) b.classList.add('was-answer');
+  });
+  if (scene === 4) {
+    document.getElementById('lid-btn').classList.remove('hidden');
+  }
+  if (scene === 2) {
+    const fb = document.getElementById('flask-btn');
+    fb.textContent = scene2Open ? '🔒 ふたを閉じた実験にもどる' : '🔓 ふたを開けて点火する';
+    fb.classList.remove('hidden');
+    fb.disabled = false;
+  }
+}
+
+// シーン2: 密閉 ⇔ ふた開け を切りかえて、もう一度よそうから
+function toggleFlaskLid() {
+  if (scene !== 2 || phase !== 'done') return;
+  scene2Open = !scene2Open;
+  resetScene();
+}
+
+function openLid() {
+  if (scene !== 4 || phase !== 'done') return;
+  phase = 'opening';
+  openT = 0;
+  document.getElementById('lid-btn').disabled = true;
+}
+
+function showOpenedResult() {
+  const rb = document.getElementById('result-box');
+  document.getElementById('result-verdict').textContent = '🫧 CO₂ が にげた！';
+  document.getElementById('result-verdict').className = 'verdict miss';
+  document.getElementById('result-fact').innerHTML =
+    '58.00 g → 57.40 g（−0.60 g）<br>へったぶん ＝ にげた CO₂ の質量！<br>ビーカー（ふたなし）で混ぜると最初から軽くなっていくのも同じ理由。';
+  rb.classList.add('show');
+  const nh = document.getElementById('next-hint');
+  nh.innerHTML = '🔬 粒子で見ると…にげた CO₂ も <b>消えてはいない</b>。合わせれば質量はぴったり保存！　💡かいせつ も読んでみよう';
+  nh.classList.add('show');
+}
+
+function resetScene() {
+  phase = 'predict';
+  prediction = null;
+  animT = 0; openT = 0;
+  sparks = []; bubbles = []; precip = [];
+  buildAtoms();
+  buildSceneUI();
+  document.getElementById('action-btn').disabled = true;
+  document.getElementById('lid-btn').classList.add('hidden');
+  document.getElementById('lid-btn').disabled = false;
+  const fb = document.getElementById('flask-btn');
+  fb.classList.add('hidden'); fb.disabled = false;
+  document.getElementById('result-box').classList.remove('show');
+  document.getElementById('next-hint').classList.remove('show');
+  document.querySelectorAll('#predict-btns button').forEach(b => {
+    b.disabled = false; b.classList.remove('selected', 'was-answer');
+  });
+  document.getElementById('explainer').classList.remove('show');
+}
+
+// ---------- イベント ----------
+document.querySelectorAll('.scene-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    scene = parseInt(tab.dataset.scene);
+    scene2Open = false;   // タブを移ると密閉版にもどす
+    document.querySelectorAll('.scene-tab').forEach(t => t.classList.toggle('active', t === tab));
+    resetScene();
+  });
+});
+document.getElementById('action-btn').addEventListener('click', startReaction);
+document.getElementById('lid-btn').addEventListener('click', openLid);
+document.getElementById('flask-btn').addEventListener('click', toggleFlaskLid);
+document.getElementById('reset-btn').addEventListener('click', resetScene);
+
+document.getElementById('view-eye').addEventListener('click', () => setView(false));
+document.getElementById('view-particle').addEventListener('click', () => setView(true));
+function setView(p) {
+  particleView = p;
+  document.getElementById('view-eye').classList.toggle('active', !p);
+  document.getElementById('view-particle').classList.toggle('active', p);
+  document.getElementById('switch-hint').innerHTML = p
+    ? '原子は うまれない・きえない。<br><b>組み合わせ</b>が変わるだけ！'
+    : 'スイッチひとつで<br>見えない粒子が見える！';
+}
+
+document.getElementById('explain-btn').addEventListener('click', () => {
+  document.getElementById('explainer').classList.toggle('show');
+});
+document.getElementById('explain-close').addEventListener('click', () => {
+  document.getElementById('explainer').classList.remove('show');
+});
+
+</script>
+</body>
+</html>

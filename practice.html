@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>質量保存の法則 れんしゅう問題｜中2理科</title>
+<meta property="og:title" content="質量保存の法則 れんしゅう問題">
+<meta property="og:description" content="中2「化学変化と物質の質量」の選択式演習14問。画面ではタップで即採点、印刷するとそのままA4プリントになる。">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&family=Kaisei+Decol:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FAF6E8;
+  --paper: #FFFBF0;
+  --ink: #3A3530;
+  --accent: #D97A4B;
+  --accent2: #4A7BAA;
+  --green: #4CB780;
+  --pink: #E8849C;
+  --grid: rgba(180, 160, 120, 0.12);
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'M PLUS Rounded 1c', system-ui, sans-serif;
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+.wrap { max-width: 860px; margin: 0 auto; padding: 10px 18px 40px; }
+
+header.title {
+  display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+  border-bottom: 2px dashed var(--accent); padding-bottom: 4px; margin-bottom: 10px;
+}
+header.title h1 { font-size: 19px; margin: 0; font-weight: 800; white-space: nowrap; }
+header.title .sub { font-size: 12.5px; color: #8a7a60; font-family: 'Kaisei Decol', serif; white-space: nowrap; }
+.name-line { display: none; }
+
+/* ===== 画面ツールバー ===== */
+.toolbar {
+  position: sticky; top: 0; z-index: 20;
+  background: var(--paper);
+  border: 2px solid #EADFC4; border-radius: 12px;
+  padding: 8px 14px; margin-bottom: 12px;
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  box-shadow: 0 3px 10px rgba(120, 100, 80, 0.10);
+}
+.score { font-weight: 800; font-size: 15px; color: var(--accent); white-space: nowrap; }
+.progress { flex: 1; min-width: 120px; height: 12px; background: #F0E6CC; border-radius: 999px; overflow: hidden; }
+.progress > div { height: 100%; width: 0%; background: linear-gradient(90deg, #E8A040, #4CB780); border-radius: 999px; transition: width 0.3s; }
+.tool-btn {
+  background: #fff; border: 2px solid #C8BC9A; border-radius: 999px;
+  padding: 5px 12px; font-family: inherit; font-weight: 700; font-size: 12px;
+  cursor: pointer; color: #6a5a40; white-space: nowrap;
+}
+.tool-btn:hover { border-color: var(--accent); color: var(--accent); }
+.tool-btn.on { background: var(--accent2); border-color: var(--accent2); color: #fff; }
+
+/* ===== パート見出し ===== */
+.part-head {
+  display: flex; align-items: center; gap: 9px;
+  margin: 20px 0 8px;
+}
+.part-head .badge {
+  background: var(--accent); color: #fff; font-weight: 800; font-size: 12.5px;
+  border-radius: 999px; padding: 3px 13px; white-space: nowrap;
+}
+.part-head .pt { font-weight: 800; font-size: 14.5px; }
+.part-head .note { font-size: 11px; color: #9a8a70; }
+
+/* ===== 問題カード ===== */
+.qcard {
+  background: var(--paper);
+  border: 2px solid #EADFC4; border-radius: 14px;
+  padding: 12px 16px; margin-bottom: 10px;
+}
+.qcard .qrow { display: flex; gap: 9px; align-items: flex-start; }
+.qcard .qnum {
+  flex-shrink: 0;
+  width: 30px; height: 30px; border-radius: 50%;
+  background: #FFF3E8; border: 2px solid var(--accent); color: var(--accent);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 13px;
+}
+.qcard .qtext { font-size: 14px; line-height: 1.75; padding-top: 3px; }
+.qcard .qtext b { color: var(--accent2); }
+.choices { display: flex; flex-direction: column; gap: 6px; margin: 10px 0 0 39px; }
+.choice {
+  display: flex; align-items: center; gap: 8px;
+  background: #fff; border: 2px solid #D8CCA8; border-radius: 10px;
+  padding: 7px 12px; font-family: inherit; font-size: 13.5px; font-weight: 700;
+  cursor: pointer; color: var(--ink); text-align: left;
+  transition: transform 0.08s;
+}
+.choice:hover:not(:disabled) { transform: translateY(-1px); border-color: var(--accent); }
+.choice:disabled { cursor: default; }
+.choice .mark {
+  flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
+  background: #F0E6CC; color: #8a7a60;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 11.5px; font-weight: 800;
+}
+.choice.correct { background: #E8F6EE; border-color: var(--green); box-shadow: 2px 2px 0 var(--green); }
+.choice.correct .mark { background: var(--green); color: #fff; }
+.choice.wrong { background: #FBE8EE; border-color: var(--pink); opacity: 0.9; }
+.choice.wrong .mark { background: var(--pink); color: #fff; }
+.choice.dim { opacity: 0.5; }
+.verdict-line { margin: 8px 0 0 39px; font-weight: 800; font-size: 13.5px; display: none; }
+.verdict-line.hit { color: var(--green); display: block; }
+.verdict-line.miss { color: var(--pink); display: block; }
+.expl {
+  margin: 7px 0 0 39px;
+  background: #FFF8EA; border-left: 4px solid #E8C840;
+  border-radius: 8px; padding: 7px 11px;
+  font-size: 12.5px; line-height: 1.7; color: #5a4a35;
+  display: none;
+}
+.expl.show { display: block; }
+.expl b { color: var(--accent); }
+.ans-space { display: none; }
+
+/* ===== 記述（説明）課題 ===== */
+.hint-words {
+  margin: 9px 0 0 39px; font-size: 12px; color: #8a7a60; font-weight: 700;
+  display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
+}
+.hint-chip {
+  background: #FFF3E8; border: 1.5px solid #E0C49A; border-radius: 999px;
+  padding: 2px 11px; font-size: 12px; color: #B5683A;
+}
+.desc-input {
+  display: block; width: calc(100% - 39px); margin: 9px 0 0 39px;
+  border: 2px solid #D8CCA8; border-radius: 10px; padding: 9px 12px;
+  font-family: inherit; font-size: 13.5px; line-height: 1.7; color: var(--ink);
+  background: #fff; resize: vertical; box-sizing: border-box;
+}
+.desc-input:focus { outline: none; border-color: var(--accent); box-shadow: 2px 2px 0 var(--accent); }
+.write-lines { display: none; }
+.reveal-btn {
+  margin: 9px 0 0 39px;
+  background: #fff; border: 2px solid var(--accent2); color: var(--accent2);
+  border-radius: 999px; padding: 6px 16px; font-family: inherit;
+  font-weight: 800; font-size: 12.5px; cursor: pointer;
+}
+.reveal-btn:hover { background: #EAF1F8; }
+.expl.model { border-left-color: var(--accent2); }
+.check-points { margin-top: 7px; padding-top: 6px; border-top: 1px dashed #d8c9a8; }
+.check-points b { color: var(--accent2); }
+.check-points ul { margin: 4px 0 0; padding-left: 18px; }
+.check-points li { margin: 2px 0; }
+
+/* ===== 結果バナー ===== */
+.final-banner {
+  display: none;
+  background: var(--paper); border: 3px solid var(--green); border-radius: 16px;
+  padding: 16px 20px; margin: 18px 0; text-align: center;
+  box-shadow: 0 4px 14px rgba(76, 183, 128, 0.18);
+}
+.final-banner.show { display: block; animation: pop 0.3s ease-out; }
+@keyframes pop { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.final-banner .big { font-size: 21px; font-weight: 800; color: var(--green); }
+.final-banner .msg { font-size: 13.5px; color: #6a5a40; margin-top: 6px; line-height: 1.7; }
+.final-banner a { color: var(--accent2); font-weight: 800; }
+
+footer.page-foot { margin-top: 16px; font-size: 11px; color: #9a8a70; text-align: center; }
+footer.page-foot a { color: var(--accent2); }
+
+/* ===== 解答表示モード（先生用 / ?ans=1） ===== */
+body.show-answers .choice.is-answer {
+  background: #E8F6EE; border-color: var(--green); box-shadow: 2px 2px 0 var(--green);
+}
+body.show-answers .choice.is-answer .mark { background: var(--green); color: #fff; }
+body.show-answers .expl { display: block; }
+
+/* ============================================================
+   印刷: そのままA4プリントになる（白黒）
+   ============================================================ */
+@media print {
+  @page { size: A4; margin: 10mm 12mm; }
+  html, body { background: #fff; background-image: none; }
+  .wrap { max-width: none; padding: 0; }
+  .toolbar, .final-banner, footer.page-foot { display: none !important; }
+
+  header.title { border-bottom: 2.5px solid #000; padding-bottom: 3px; margin-bottom: 1.5mm; gap: 8px; }
+  header.title h1 { font-size: 14.5pt; color: #000; }
+  header.title .sub { font-size: 9.5pt; color: #333; }
+  .name-line {
+    display: block; margin-left: auto; font-size: 10pt; color: #000;
+    align-self: flex-end; white-space: nowrap;
+  }
+
+  .part-head { margin: 2.4mm 0 1.2mm; }
+  .part-head .badge { background: #000; color: #fff; font-size: 9.5pt; padding: 1px 10px; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  .part-head .pt { font-size: 10.5pt; color: #000; }
+  .part-head .note { font-size: 8pt; color: #444; }
+
+  .qcard {
+    border: none; border-radius: 0; background: #fff;
+    padding: 0 0 1mm 0; margin: 0 0 1.2mm 0;
+    break-inside: avoid;
+    border-bottom: 1px dashed #999;
+    position: relative;
+  }
+  .qcard .qnum {
+    width: auto; height: auto; border: none; background: none;
+    color: #000; font-size: 10.5pt; font-weight: 800;
+  }
+  .qcard .qnum::after { content: '.'; }
+  .qcard .qtext { font-size: 10.5pt; color: #000; padding-top: 0; line-height: 1.55; padding-right: 26mm; }
+  .qcard .qtext b { color: #000; }
+
+  /* 選択肢: 横並びインライン */
+  .choices { flex-direction: row; flex-wrap: wrap; gap: 1mm 5.5mm; margin: 0.9mm 0 0 8mm; }
+  .choice {
+    border: none; background: none; padding: 0; box-shadow: none;
+    font-size: 10pt; color: #000; gap: 4px;
+  }
+  .choice .mark {
+    width: auto; height: auto; background: none; color: #000;
+    font-size: 10pt; font-weight: 700;
+  }
+  .choice .mark::after { content: '：'; }
+  .choice.correct, .choice.wrong { background: none; border: none; box-shadow: none; opacity: 1; }
+  .choice.correct .mark, .choice.wrong .mark { background: none; color: #000; }
+  .choice.dim { opacity: 1; }
+  .verdict-line { display: none !important; }
+
+  /* 解答欄: 問題行の右端に重ねて縦スペースを使わない */
+  .ans-space {
+    display: block; position: absolute; top: 0; right: 0;
+    font-size: 9.5pt; color: #000; font-weight: 700;
+  }
+  .ans-space .box {
+    display: inline-block; min-width: 14mm; border: 1.2pt solid #000;
+    border-radius: 2mm; height: 6.5mm; vertical-align: middle; margin-left: 1.5mm;
+  }
+
+  /* 解説: 通常印刷では隠す。解答モード印刷で出す */
+  .expl { display: none; background: #f2f2f2; border-left: 3pt solid #000; color: #000; font-size: 8.5pt; line-height: 1.5; margin: 0.8mm 0 0 8mm; padding: 1.2mm 2.5mm; border-radius: 0; }
+  .expl b { color: #000; }
+  body.show-answers .expl { display: block; }
+  body.show-answers .choice.is-answer { background: none; border: none; box-shadow: none; }
+  body.show-answers .choice.is-answer .mark { background: #000; color: #fff; border-radius: 50%; width: 5.5mm; height: 5.5mm; display: inline-flex; align-items: center; justify-content: center; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  body.show-answers .choice.is-answer .mark::after { content: ''; }
+  body.show-answers .choice.is-answer .ctext { text-decoration: underline; text-underline-offset: 2px; font-weight: 800; }
+  body.show-answers .ans-space .box { position: relative; }
+  body.show-answers .ans-space .box::before {
+    content: attr(data-ans);
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 11pt;
+  }
+
+  /* パート3の前で改ページ（1枚目=パート1・2 / 2枚目=パート3・4・5） */
+  #part3-head { break-before: page; }
+  /* 解答版は解説のぶん背が高く孤立ページが出るので、自然分割に任せる */
+  body.show-answers #part3-head { break-before: auto; }
+
+  /* 記述課題: 画面用textareaは隠し、罫線つき解答欄を出す */
+  .desc-card .qtext { padding-right: 0; }
+  .hint-words { margin: 1mm 0 0 8mm; font-size: 9pt; color: #000; }
+  .hint-chip { border: 1pt solid #000; background: none; color: #000; border-radius: 2mm; padding: 0 2mm; font-size: 9pt; }
+  .desc-input, .reveal-btn { display: none !important; }
+  .write-lines { display: block; margin: 2.5mm 0 0 8mm; }
+  .write-lines span {
+    display: block; height: 8mm; border-bottom: 0.8pt solid #000;
+    margin-right: 4mm;
+  }
+  .expl.model { display: none; }
+  body.show-answers .expl.model { display: block; }
+  .check-points { border-top: 1px dashed #999; }
+  .check-points b { color: #000; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="title">
+    <h1>📝 質量保存の法則 れんしゅう問題</h1>
+    <span class="sub">中2理科〈化学変化と物質の質量〉</span>
+    <span class="name-line">2年　　組　　番　名前　　　　　　　　　　　　</span>
+  </header>
+
+  <div class="toolbar">
+    <span class="score" id="score">0 / 14 問</span>
+    <div class="progress"><div id="prog-fill"></div></div>
+    <button class="tool-btn" id="ans-toggle">🔑 先生用：解答を表示</button>
+    <button class="tool-btn" onclick="window.print()">🖨️ 印刷する</button>
+  </div>
+
+  <div id="quiz"></div>
+
+  <div class="final-banner" id="final-banner">
+    <div class="big" id="final-score"></div>
+    <div class="msg" id="final-msg"></div>
+  </div>
+
+  <footer class="page-foot">
+    🔬 <a href="index.html">シミュレーション「質量保存の法則ラボ」</a> でふり返ると、まちがえた問題のしくみが見えるよ！
+  </footer>
+</div>
+
+<script>
+/* ============================================================
+   問題データ
+   part: 見出し / q: 問題文 / c: 選択肢 / a: 正解index / e: 解説
+   kana: 選択肢記号
+   ============================================================ */
+const KANA = ['ア', 'イ', 'ウ', 'エ'];
+const MARU = ['○', '×'];
+
+const PARTS = [
+  { id: 1, badge: 'パート 1', title: '質量はどうなる？ 5つのパターン', note: '実験のようすを思いうかべて選ぼう' },
+  { id: 2, badge: 'パート 2', title: '理由としくみ', note: '原子で考えるのがコツ！' },
+  { id: 3, badge: 'パート 3', title: '計算してみよう', note: '反応の前後で合計は同じ！' },
+  { id: 4, badge: 'パート 4', title: '○か ×か', note: 'ひっかけ注意！' },
+  { id: 5, badge: 'パート 5', title: '説明してみよう ✍️', note: '考えを自分のことばで書こう' },
+];
+
+const QUESTIONS = [
+  // ===== パート1: プリントの5パターン =====
+  {
+    part: 1,
+    q: '燃焼皿にのせた<b>銅の粉</b>を、<b>空気中で</b>加熱した。質量はどうなる？',
+    c: ['大きくなる', '小さくなる', '変わらない'],
+    a: 0,
+    e: '空気中の<b>酸素が銅に結びつく</b>ぶんだけ重くなる（銅＋酸素→酸化銅）。シミュレーションのスチールウール（鉄）と同じしくみ。',
+  },
+  {
+    part: 1,
+    q: '丸底フラスコに銅を入れ、<b>ゴム栓でフタをして</b>加熱した。質量はどうなる？',
+    c: ['大きくなる', '小さくなる', '変わらない'],
+    a: 2,
+    e: '結びつく酸素も<b>はじめからフラスコの中</b>にある。物質の出入りがないので、全体の質量は変わらない。',
+  },
+  {
+    part: 1,
+    q: 'うすい硫酸に水酸化バリウム水溶液を混ぜたら、<b>白い沈殿</b>（硫酸バリウム）ができた。質量はどうなる？',
+    c: ['大きくなる', '小さくなる', '変わらない'],
+    a: 2,
+    e: '気体が出ない反応。原子の<b>組み合わせが変わっただけ</b>なので、ふたをしなくても質量は変わらない。',
+  },
+  {
+    part: 1,
+    q: '<b>密閉したビン</b>の中で、炭酸水素ナトリウムに塩酸を加えたら、二酸化炭素が発生した。質量はどうなる？',
+    c: ['大きくなる', '小さくなる', '変わらない'],
+    a: 2,
+    e: '発生した二酸化炭素も<b>ビンの中に閉じこめられている</b>ので、全体の質量は変わらない。',
+  },
+  {
+    part: 1,
+    q: '<b>ビーカー（ふたなし）</b>の中で、炭酸水素ナトリウムに塩酸を加えたら、二酸化炭素が発生した。質量はどうなる？',
+    c: ['大きくなる', '小さくなる', '変わらない'],
+    a: 1,
+    e: '発生した二酸化炭素が<b>空気中へ出ていく</b>ぶんだけ軽くなる。④とのちがいは「ふたがあるか」だけ！',
+  },
+  // ===== パート2: 理由としくみ =====
+  {
+    part: 2,
+    q: '<b>質量保存の法則</b>が成り立つ理由として、もっとも正しいものはどれ？',
+    c: [
+      '原子の組み合わせは変わるが、原子の種類と数は変わらないから',
+      '新しい原子が生まれて、古い原子が消えるから',
+      '化学変化の前後で、原子がだんだん小さくなるから',
+      '化学変化では気体が発生しないから',
+    ],
+    a: 0,
+    e: '化学変化は原子の<b>組みかえ</b>。原子は<b>うまれない・きえない</b>から、種類と数＝質量はそのまま。',
+  },
+  {
+    part: 2,
+    q: '問1で、銅を空気中で加熱すると質量が<b>大きくなった理由</b>は？',
+    c: [
+      '銅の原子の数が増えたから',
+      '加えた熱のぶんだけ重くなったから',
+      '空気中の酸素が銅に結びついたから',
+      '銅の原子そのものが重い原子に変わったから',
+    ],
+    a: 2,
+    e: '増えたぶんの正体は<b>結びついた酸素の質量</b>。酸素は見えないけれど、ちゃんと質量がある。',
+  },
+  {
+    part: 2,
+    q: '問5で、ビーカー（ふたなし）では質量が<b>小さくなった理由</b>は？',
+    c: [
+      '二酸化炭素が消えてなくなったから',
+      '発生した二酸化炭素が空気中へ出ていったから',
+      '塩酸が全部蒸発したから',
+      '反応で原子の数が減ったから',
+    ],
+    a: 1,
+    e: 'CO₂は<b>消えたのではなく、空気中へ逃げた</b>だけ。逃げたぶんまで合わせれば質量は保存されている。',
+  },
+  {
+    part: 2,
+    q: '問4の実験（密閉ビン）のあと、<b>ふたをあけて</b>しばらくおくと、全体の質量はどうなる？',
+    c: ['大きくなる', '小さくなる', '変わらない', 'いったん増えてから元にもどる'],
+    a: 1,
+    e: 'ふたをあけると、閉じこめられていた<b>CO₂が外へ逃げていく</b>ので、そのぶん軽くなる。',
+  },
+  // ===== パート3: 計算 =====
+  {
+    part: 3,
+    q: 'うすい硫酸<b>10g</b>と水酸化バリウム水溶液<b>17g</b>を混ぜると、硫酸バリウム<b>23g</b>と水ができた。できた水は何g？',
+    c: ['2 g', '4 g', '6 g', '13 g'],
+    a: 1,
+    e: '反応前の合計は 10＋17＝<b>27g</b>。反応後も合計27gのはずだから、水は 27−23＝<b>4g</b>。',
+  },
+  {
+    part: 3,
+    q: '密閉容器の中で炭酸水素ナトリウムと塩酸を反応させた。反応前の全体は<b>58.0g</b>。反応後にふたをあけてしばらくすると<b>57.4g</b>になった。逃げた二酸化炭素は何g？',
+    c: ['0.4 g', '0.6 g', '1.6 g', '57.4 g'],
+    a: 1,
+    e: '<b>へった質量＝逃げた気体の質量</b>。58.0−57.4＝<b>0.6g</b>。',
+  },
+  {
+    part: 3,
+    q: '石灰石<b>2.0g</b>をうすい塩酸<b>10.0g</b>に入れたら（ふたなし）、気体が発生して、反応後の全体は<b>11.2g</b>だった。発生した気体は何g？',
+    c: ['0.8 g', '1.2 g', '2.0 g', '8.0 g'],
+    a: 0,
+    e: '反応前の合計は 2.0＋10.0＝<b>12.0g</b>。12.0−11.2＝<b>0.8g</b> が空気中へ逃げた気体のぶん。',
+  },
+  // ===== パート4: ○× =====
+  {
+    part: 4,
+    q: '「砂糖60gを水200gにとかすと、とけて見えなくなっても、全体の質量は260gになる」',
+    c: ['○ 正しい', '× まちがい'],
+    a: 0,
+    e: 'とけて<b>見えなくなっても、砂糖の粒子はなくなっていない</b>から、ぜんたいはきっちり 60＋200＝260g。質量保存の考え方は、とけたり状態が変わったりする<b>物理変化でも成り立つ</b>。',
+  },
+  {
+    part: 4,
+    q: '「気体が出ていく反応では、質量保存の法則は成り立たない」',
+    c: ['○ 正しい', '× まちがい'],
+    a: 1,
+    e: 'はかりの上から見ると減るけれど、<b>逃げた気体まで合わせれば質量は保存</b>されている。質量保存の法則は<b>すべての化学変化</b>で成り立つ。',
+  },
+  // ===== パート5: 説明（記述）=====
+  {
+    part: 5,
+    type: 'desc',
+    q: '同じ反応（炭酸水素ナトリウム＋塩酸）なのに、<b>密閉したビン</b>（問4）では質量が変わらず、<b>ふたのないビーカー</b>（問5）では質量が小さくなった。この「ちがい」が生まれる理由を説明しなさい。',
+    hint: ['二酸化炭素', '空気中', '出ていく', '閉じこめる'],
+    model: 'どちらの実験でも二酸化炭素が発生する。<b>密閉したビン</b>では、発生した二酸化炭素がビンの中に残るので、全体の質量は変わらない。<b>ふたのないビーカー</b>では、発生した二酸化炭素が空気中へ出ていくので、その分だけ質量が小さくなる。（原子そのものは消えていないので、逃げた気体まで合わせれば質量は保存されている。）',
+    points: ['どちらも二酸化炭素（気体）が発生することにふれている', '密閉＝気体が中に残る → 変わらない、と書けている', 'ふたなし＝気体が空気中へ出ていく → 減る、と書けている'],
+  },
+];
+
+/* ============================================================
+   レンダリング
+   ============================================================ */
+const quizEl = document.getElementById('quiz');
+let answered = 0, correct = 0;
+const TOTAL = QUESTIONS.filter(q => !q.type).length;   // 自動採点する選択問題の数（記述は除く）
+
+function render() {
+  let html = '';
+  let lastPart = 0;
+  QUESTIONS.forEach((Q, qi) => {
+    if (Q.part !== lastPart) {
+      const P = PARTS.find(p => p.id === Q.part);
+      html += `<div class="part-head" id="part${P.id}-head">
+        <span class="badge">${P.badge}</span>
+        <span class="pt">${P.title}</span>
+        <span class="note">${P.note}</span>
+      </div>`;
+      lastPart = Q.part;
+    }
+    if (Q.type === 'desc') {
+      html += `<div class="qcard desc-card" data-qi="${qi}">
+        <div class="qrow"><span class="qnum">${qi + 1}</span><span class="qtext">${Q.q}</span></div>
+        <div class="hint-words">💬 つかうことば：${Q.hint.map(h => `<span class="hint-chip">${h}</span>`).join('')}</div>
+        <textarea class="desc-input" rows="3" placeholder="ここに考えを書いてみよう…"></textarea>
+        <div class="write-lines"><span></span><span></span><span></span></div>
+        <button class="reveal-btn" data-qi="${qi}">✏️ 模範解答を見る</button>
+        <div class="expl model" id="expl-${qi}">💡 模範解答：${Q.model}
+          <div class="check-points"><b>採点のポイント</b><ul>${Q.points.map(p => `<li>${p}</li>`).join('')}</ul></div>
+        </div>
+      </div>`;
+      return;
+    }
+    const kana = (Q.part === 4) ? Q.c.map((_, i) => MARU[i]) : Q.c.map((_, i) => KANA[i]);
+    html += `<div class="qcard" data-qi="${qi}">
+      <div class="qrow"><span class="qnum">${qi + 1}</span><span class="qtext">${Q.q}</span></div>
+      <div class="choices">
+        ${Q.c.map((c, ci) => `
+          <button class="choice ${ci === Q.a ? 'is-answer' : ''}" data-ci="${ci}">
+            <span class="mark">${kana[ci]}</span><span class="ctext">${c}</span>
+          </button>`).join('')}
+      </div>
+      <span class="ans-space">答え<span class="box" data-ans="${kana[Q.a]}"></span></span>
+      <div class="verdict-line" id="verdict-${qi}"></div>
+      <div class="expl" id="expl-${qi}">💡 ${Q.e}</div>
+    </div>`;
+  });
+  quizEl.innerHTML = html;
+
+  quizEl.querySelectorAll('.qcard').forEach(card => {
+    const qi = parseInt(card.dataset.qi);
+    card.querySelectorAll('.choice').forEach(btn => {
+      btn.addEventListener('click', () => answer(qi, parseInt(btn.dataset.ci), card));
+    });
+  });
+  quizEl.querySelectorAll('.reveal-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const ex = document.getElementById('expl-' + btn.dataset.qi);
+      const showing = ex.classList.toggle('show');
+      btn.textContent = showing ? '✏️ 模範解答をかくす' : '✏️ 模範解答を見る';
+    });
+  });
+}
+
+function answer(qi, ci, card) {
+  const Q = QUESTIONS[qi];
+  if (card.dataset.done) return;
+  card.dataset.done = '1';
+  answered++;
+  const hit = (ci === Q.a);
+  if (hit) correct++;
+
+  card.querySelectorAll('.choice').forEach(btn => {
+    const bci = parseInt(btn.dataset.ci);
+    btn.disabled = true;
+    if (bci === Q.a) btn.classList.add('correct');
+    else if (bci === ci) btn.classList.add('wrong');
+    else btn.classList.add('dim');
+  });
+  const v = document.getElementById('verdict-' + qi);
+  v.textContent = hit ? '🎉 せいかい！' : '😢 ざんねん…正解は 緑 のほう！';
+  v.className = 'verdict-line ' + (hit ? 'hit' : 'miss');
+  document.getElementById('expl-' + qi).classList.add('show');
+
+  document.getElementById('score').textContent = `${correct} / ${TOTAL} 問`;
+  document.getElementById('prog-fill').style.width = (answered / TOTAL * 100) + '%';
+
+  if (answered === TOTAL) showFinal();
+}
+
+function showFinal() {
+  const fb = document.getElementById('final-banner');
+  document.getElementById('final-score').textContent = `けっか発表！ ${correct} / ${TOTAL} 問 せいかい`;
+  const rate = correct / TOTAL;
+  let msg;
+  if (rate === 1) msg = 'パーフェクト！🏆 原子マスターの称号をさずけます。';
+  else if (rate >= 0.8) msg = 'すばらしい！あと少しで全問制覇。まちがえた問題の解説を読み直そう。';
+  else if (rate >= 0.6) msg = 'いいペース！「ふたがあるか・気体が出るか」に注目すると正答率が上がるよ。';
+  else msg = 'まずは <a href="index.html">シミュレーション</a> で4つの実験をもう一度見てから、再チャレンジしよう！';
+  document.getElementById('final-msg').innerHTML = msg + '<br>🔬 <a href="index.html">シミュレーションでふり返る</a>';
+  fb.classList.add('show');
+  fb.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+/* ===== 解答表示モード ===== */
+const ansToggle = document.getElementById('ans-toggle');
+function setAnswerMode(on) {
+  document.body.classList.toggle('show-answers', on);
+  ansToggle.classList.toggle('on', on);
+  ansToggle.textContent = on ? '🔑 解答を表示中（クリックでもどす）' : '🔑 先生用：解答を表示';
+}
+ansToggle.addEventListener('click', () => setAnswerMode(!document.body.classList.contains('show-answers')));
+
+render();
+if (new URLSearchParams(location.search).get('ans') === '1') setAnswerMode(true);
+</script>
+</body>
+</html>
