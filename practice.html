@@ -187,7 +187,7 @@ body.show-answers .expl { display: block; }
   .wrap { max-width: none; padding: 0; }
   .toolbar, .final-banner, footer.page-foot { display: none !important; }
 
-  header.title { border-bottom: 2.5px solid #000; padding-bottom: 3px; margin-bottom: 1.5mm; gap: 8px; }
+  header.title { border-bottom: 2.5px solid #000; padding-bottom: 3px; margin-bottom: 4.5mm; gap: 8px; }
   header.title h1 { font-size: 14.5pt; color: #000; }
   header.title .sub { font-size: 9.5pt; color: #333; }
   .name-line {
@@ -195,16 +195,17 @@ body.show-answers .expl { display: block; }
     align-self: flex-end; white-space: nowrap;
   }
 
-  .part-head { margin: 2.4mm 0 1.2mm; }
+  .part-head { margin: 7mm 0 3mm; break-after: avoid; }
+  .part-head:first-of-type { margin-top: 1mm; }
   .part-head .badge { background: #000; color: #fff; font-size: 9.5pt; padding: 1px 10px; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
   .part-head .pt { font-size: 10.5pt; color: #000; }
   .part-head .note { font-size: 8pt; color: #444; }
 
   .qcard {
     border: none; border-radius: 0; background: #fff;
-    padding: 0 0 1mm 0; margin: 0 0 1.2mm 0;
+    padding: 0 0 3mm 0; margin: 0 0 5.5mm 0;
     break-inside: avoid;
-    border-bottom: 1px dashed #999;
+    border-bottom: 1px dashed #bbb;
     position: relative;
   }
   .qcard .qnum {
@@ -212,11 +213,11 @@ body.show-answers .expl { display: block; }
     color: #000; font-size: 10.5pt; font-weight: 800;
   }
   .qcard .qnum::after { content: '.'; }
-  .qcard .qtext { font-size: 10.5pt; color: #000; padding-top: 0; line-height: 1.55; padding-right: 29mm; }
+  .qcard .qtext { font-size: 10.5pt; color: #000; padding-top: 0; line-height: 1.8; padding-right: 29mm; }
   .qcard .qtext b { color: #000; }
 
   /* 選択肢: 横並びインライン */
-  .choices { flex-direction: row; flex-wrap: wrap; gap: 1mm 5.5mm; margin: 0.9mm 0 0 8mm; }
+  .choices { flex-direction: row; flex-wrap: wrap; gap: 2.5mm 7mm; margin: 3mm 0 0 8mm; }
   .choice {
     border: none; background: none; padding: 0; box-shadow: none;
     font-size: 10pt; color: #000; gap: 4px;
@@ -238,8 +239,8 @@ body.show-answers .expl { display: block; }
     font-size: 9.5pt; color: #000; font-weight: 700;
   }
   .ans-space .box {
-    display: inline-block; min-width: 13mm; border: 1.2pt solid #000;
-    border-radius: 2mm; height: 6.5mm; vertical-align: middle; margin-left: 1.5mm;
+    display: inline-block; min-width: 15mm; border: 1.2pt solid #000;
+    border-radius: 2mm; height: 8mm; vertical-align: middle; margin-left: 1.5mm;
   }
 
   /* 解説: 通常印刷では隠す。解答モード印刷で出す */
@@ -258,19 +259,17 @@ body.show-answers .expl { display: block; }
     font-weight: 800; font-size: 11pt;
   }
 
-  /* パート3の前で改ページ（1枚目=パート1・2 / 2枚目=パート3・4・5） */
-  #part3-head { break-before: page; }
-  /* 解答版は解説のぶん背が高く孤立ページが出るので、自然分割に任せる */
-  body.show-answers #part3-head { break-before: auto; }
+  /* 改ページは強制せず、行間・間隔をゆったりとった自然分割にまかせる
+     （余白があるのに詰める、を避ける）。見出しは次の問題と必ず同じページに。 */
 
-  /* 記述課題: 画面用textareaは隠し、罫線つき解答欄を出す */
+  /* 記述課題: 画面用textareaは隠し、罫線つき解答欄を出す（広めに） */
   .desc-card .qtext { padding-right: 0; }
-  .hint-words { margin: 1mm 0 0 8mm; font-size: 9pt; color: #000; }
-  .hint-chip { border: 1pt solid #000; background: none; color: #000; border-radius: 2mm; padding: 0 2mm; font-size: 9pt; }
+  .hint-words { margin: 3mm 0 0 8mm; font-size: 9.5pt; color: #000; }
+  .hint-chip { border: 1pt solid #000; background: none; color: #000; border-radius: 2mm; padding: 1px 2.5mm; font-size: 9.5pt; }
   .desc-input, .reveal-btn { display: none !important; }
-  .write-lines { display: block; margin: 2.5mm 0 0 8mm; }
+  .write-lines { display: block; margin: 5mm 0 0 8mm; }
   .write-lines span {
-    display: block; height: 8mm; border-bottom: 0.8pt solid #000;
+    display: block; height: 10mm; border-bottom: 0.8pt solid #000;
     margin-right: 4mm;
   }
   .expl.model { display: none; }
@@ -478,7 +477,7 @@ function render() {
         <div class="qrow"><span class="qnum">${qi + 1}</span><span class="qtext">${Q.q}</span></div>
         <div class="hint-words">💬 使う言葉：${Q.hint.map(h => `<span class="hint-chip">${h}</span>`).join('')}</div>
         <textarea class="desc-input" rows="3" placeholder="ここに考えを書いてみよう…"></textarea>
-        <div class="write-lines"><span></span><span></span><span></span></div>
+        <div class="write-lines"><span></span><span></span><span></span><span></span><span></span></div>
         <button class="reveal-btn" data-qi="${qi}">✏️ 模範解答を見る</button>
         <div class="expl model" id="expl-${qi}">💡 模範解答：${Q.model}
           <div class="check-points"><b>採点のポイント</b><ul>${Q.points.map(p => `<li>${p}</li>`).join('')}</ul></div>
