@@ -178,6 +178,38 @@ header.title .sub { font-size: 12.5px; color: #8a7a60; font-family: 'Kaisei Deco
 }
 .next-hint.show { display: block; }
 
+/* まとめタブ */
+.scene-tab.tab-summary { background: #FFF8E6; }
+.scene-tab.tab-summary .num { background: #F0E0B0; font-size: 14px; }
+.scene-tab.tab-summary.active { border-color: #C99A3B; background: #FFF3D6; box-shadow: 2px 2px 0 #C99A3B; }
+.scene-tab.tab-summary.active .num { background: #C99A3B; }
+
+/* まとめパネル（右カラム・scene5のみ表示） */
+.summary-box { display: none; flex-direction: column; gap: 7px; }
+.summary-box.show { display: flex; }
+.summary-box > div {
+  background: var(--paper); border: 2px solid #EADFC4; border-radius: 12px;
+  padding: 8px 11px; font-size: 11.5px; line-height: 1.6; color: #5a4a35;
+}
+.summary-box .sm-head { font-weight: 800; font-size: 11px; color: #B5832B; letter-spacing: 0.04em; margin-bottom: 4px; }
+.summary-box p { margin: 3px 0; }
+.summary-box b { color: var(--accent); }
+.summary-box .sm-punch { margin-top: 5px; font-weight: 800; color: #2E7D32; }
+.summary-box .sm-punch b { color: #2E7D32; }
+.summary-box .sm-ex { font-family: 'Kaisei Decol', serif; }
+.summary-box .sm-ex b { color: var(--accent2); }
+.summary-box .sm-eq { display: inline-block; margin-top: 4px; font-weight: 800; color: #4CB780; }
+.summary-box .sm-cases .b-up,
+.summary-box .sm-cases .b-same,
+.summary-box .sm-cases .b-down {
+  display: inline-block; min-width: 32px; text-align: center; border-radius: 6px;
+  font-weight: 800; font-size: 10.5px; padding: 1px 5px; margin-right: 5px; color: #fff;
+}
+.summary-box .b-up { background: #D97A4B; }
+.summary-box .b-same { background: #4CB780; }
+.summary-box .b-down { background: #E8849C; }
+.summary-box .sm-note { margin-top: 5px; font-size: 10.5px; color: #8a7a60; }
+
 footer { margin-top: 8px; font-size: 10.5px; color: #9a8a70; text-align: center; }
 footer a { color: var(--accent2); }
 
@@ -214,6 +246,10 @@ footer a { color: var(--accent2); }
       <span class="num">4</span>
       <span class="tx"><span class="t1">🫧 あわが出る反応</span><span class="t2">密閉ビン → ふたをあけると？</span></span>
     </button>
+    <button class="scene-tab tab-summary" data-scene="5">
+      <span class="num">📜</span>
+      <span class="tx"><span class="t1">まとめ</span><span class="t2">質量保存の法則とは？</span></span>
+    </button>
   </div>
 
   <div class="main-row">
@@ -228,7 +264,7 @@ footer a { color: var(--accent2); }
     </div>
 
     <aside class="ctrl-col">
-      <div class="ctrl-box">
+      <div class="ctrl-box" id="lens-box">
         <div class="label">りかのメガネ 👓</div>
         <div class="particle-switch">
           <button id="view-eye" class="active">👀 見た目</button>
@@ -237,7 +273,7 @@ footer a { color: var(--accent2); }
         <div class="switch-hint" id="switch-hint">スイッチひとつで<br>見えない粒子が見える！</div>
       </div>
 
-      <div class="ctrl-box">
+      <div class="ctrl-box" id="predict-box">
         <div class="label" id="predict-label">Q. 質量はどうなる？</div>
         <div class="predict-btns" id="predict-btns"></div>
       </div>
@@ -252,6 +288,28 @@ footer a { color: var(--accent2); }
         <div class="fact" id="result-fact"></div>
       </div>
       <div class="next-hint" id="next-hint"></div>
+
+      <div class="summary-box" id="summary-box">
+        <div class="sm-why">
+          <div class="sm-head">なぜ変わらない？</div>
+          <p><b>①</b> 原子は 新しくできたり・なくなったり <b>しない</b></p>
+          <p><b>②</b> 反応の前後で 原子の<b>種類と数は同じ</b></p>
+          <p class="sm-punch">→ 化学反応は 原子の<b>組み合わせ</b>を変えるだけ！</p>
+        </div>
+        <div class="sm-ex">
+          <div class="sm-head">計算の例</div>
+          硫酸 <b>10g</b> ＋ 水酸化バリウム水溶液 <b>17g</b><br>
+          → 硫酸バリウム <b>23g</b> ＋ 水 <b>4g</b><br>
+          <span class="sm-eq">前 27g ＝ 後 27g</span>
+        </div>
+        <div class="sm-cases">
+          <div class="sm-head">4つの実験の早見</div>
+          <p><span class="b-up">⬆増</span> 開放でもやす → 酸素が<b>入る</b></p>
+          <p><span class="b-same">➡変</span> 密閉 → 出入り<b>なし</b></p>
+          <p><span class="b-down">⬇減</span> 開放で気体発生 → 気体が<b>出る</b></p>
+          <p class="sm-note">どれも原子は組み替わるだけ。境界（空気）を出入りした分だけ 見かけが変わる。</p>
+        </div>
+      </div>
     </aside>
   </div>
 
@@ -276,6 +334,7 @@ let scene2Open = false;     // シーン2: false=密閉点火 / true=ふたを�
 let prediction = null;
 let animT = 0;              // 反応の進行 0..1
 let openT = 0;              // ふた開け後の進行 0..1
+let s5T = 0;                // まとめ(scene5)の組み替えアニメ進行（ループ）
 let canvasW = 840, canvasH = 470;
 let sparks = [];            // 火の粉
 let bubbles = [];           // 見た目モードの泡
@@ -293,6 +352,10 @@ const ELEM = {
   Na: { c: '#A47BD0', tc: '#fff', r: 10, label: 'Na' },
   C:  { c: '#5A5A5A', tc: '#fff', r: 9,  label: 'C' },
   Cl: { c: '#6BBF6B', tc: '#fff', r: 10, label: 'Cl' },
+  // まとめ(scene5)用の模式原子 A B C D
+  A:  { c: '#4A7BAA', tc: '#fff', r: 17, label: 'A' },
+  B:  { c: '#E8A23D', tc: '#fff', r: 17, label: 'B' },
+  D:  { c: '#E8849C', tc: '#fff', r: 17, label: 'D' },
 };
 
 // ---------- シーン定義 ----------
@@ -390,6 +453,12 @@ const EXPLAIN = {
       <p>ふたをあけると CO₂ が空気中へ<b>にげていく</b>ので、そのぶん軽くなる。</p>
       <div class="keybox">📌 ビーカー（ふたなし）で混ぜたときに軽くなるのも同じ理由！<br>へった質量 ＝ にげた CO₂ の質量</div>
       <p>原子は消えていない。<b>にげたぶんまで合わせれば、質量はぴったり保存</b>されている！</p>`,
+  },
+  5: {
+    title: '📜 質量保存の法則とは？',
+    body: `<p><b>化学変化の前と後で、物質ぜんたいの質量は変わらない。</b>これを質量保存の法則という。</p>
+      <div class="rx">A−B ＋ C−D → A−C ＋ B−D</div>
+      <p>反応で起きるのは原子の<b>組み替え</b>だけ。原子は新しくできたり、なくなったりしない。種類も数も同じ。だから質量も変わらない。</p>`,
   },
 };
 
@@ -538,6 +607,14 @@ function buildAtoms() {
       atoms.push({ el: 'Cl', x: acid[1].x, y: acid[1].y, sx: acid[1].x, sy: acid[1].y, tx: nc.x + 9, ty: nc.y, grp: 'liq', mol: m });
     }
   }
+  if (scene === 5) {
+    // A−B ＋ C−D → A−C ＋ B−D（B と C が相手をとりかえる）
+    const s = L.s5, g = s.gap;
+    atoms.push({ el: 'A', sx: s.xL - g, sy: s.y1, tx: s.xR - g, ty: s.y1 });
+    atoms.push({ el: 'B', sx: s.xL + g, sy: s.y1, tx: s.xR - g, ty: s.y2 });
+    atoms.push({ el: 'C', sx: s.xL - g, sy: s.y2, tx: s.xR + g, ty: s.y1 });
+    atoms.push({ el: 'D', sx: s.xL + g, sy: s.y2, tx: s.xR + g, ty: s.y2 });
+  }
 }
 
 // ============================================================
@@ -579,6 +656,16 @@ function layout() {
       scale: { x: sx, y: sy, w: 320, h: 26 },
       beaker: { x: bk.x, y: bk.y, w: bk.w, h: bk.h, topY: bk.y - bk.h / 2, botY: bk.y + bk.h / 2 },
       smallBeaker: { x: sx + 130, y: sy - 13 - 32, w: 86, h: 64 },  // 同じ台の上
+    };
+  }
+  if (scene === 5) {
+    return {
+      counterY: H - counterH, mainH,
+      s5: {
+        xL: W * 0.26, xR: W * 0.74,
+        y1: mainH * 0.50, y2: mainH * 0.78,
+        gap: 18, arrowX: W * 0.5, defY: mainH * 0.16,
+      },
     };
   }
   // scene 4
@@ -640,12 +727,15 @@ function draw() {
     openT = Math.min(1, openT + 0.007);
     if (openT >= 1) { phase = 'opened'; showOpenedResult(); }
   }
+  // まとめ: 組み替えアニメをループ（0→1 morph, 1→1.8 hold, then loop）
+  if (scene === 5) { s5T += 0.007; if (s5T > 1.8) s5T = 0; }
   if (flashT > 0) flashT -= 0.04;
 
   if (scene === 1) drawScene1();
   else if (scene === 2) drawScene2();
   else if (scene === 3) drawScene3();
   else if (scene === 4) drawScene4();
+  else if (scene === 5) drawScene5();
 
   drawCounterBand();
   drawResultBanner();
@@ -1175,6 +1265,69 @@ function updateBubbles(L) {
 }
 
 // ============================================================
+// シーン5: まとめ（A−B ＋ C−D → A−C ＋ B−D の組み替え）
+// ============================================================
+function s5atom(el) { return atoms.find(a => a.el === el); }
+
+function drawScene5() {
+  const L = layout(), s = L.s5;
+  const p = easeIO(Math.min(1, s5T));
+
+  // --- 定義（上） ---
+  textAlign(CENTER, TOP); noStroke();
+  fill('#D97A4B'); textStyle(BOLD); textSize(Math.min(20, canvasW * 0.034));
+  text('⚖️ 質量保存の法則', canvasW / 2, s.defY - 22);
+  fill('#5a4a35'); textSize(Math.min(13, canvasW * 0.022));
+  text('化学変化の前と後で、物質ぜんたいの質量は変わらない。', canvasW / 2, s.defY + 6);
+  textStyle(NORMAL);
+
+  // --- 反応前 / 反応後 ラベルと矢印 ---
+  const topY = Math.min(s.y1, s.y2) - 44;
+  fill('#9a8a70'); textSize(12); textStyle(BOLD);
+  text('反応前', s.xL, topY);
+  text('反応後', s.xR, topY);
+  // 矢印
+  stroke('#C99A3B'); strokeWeight(3);
+  const ay = (s.y1 + s.y2) / 2;
+  drawArrow(s.arrowX - 22, ay, s.arrowX + 22, ay);
+  noStroke();
+
+  // --- 結合（前後をクロスフェード） ---
+  // B と C は中央で正面衝突しないよう、左右にふくらませた曲線で「すれ違わせる」
+  const cx0 = s.arrowX;
+  const pos = el => {
+    const a = s5atom(el);
+    if (el === 'B' || el === 'C') {
+      const ctrlX = cx0 + (el === 'B' ? -36 : 36);
+      const ctrlY = (a.sy + a.ty) / 2;
+      const q = (1 - p) * (1 - p), q2 = 2 * (1 - p) * p, q3 = p * p;
+      return { x: q * a.sx + q2 * ctrlX + q3 * a.tx, y: q * a.sy + q2 * ctrlY + q3 * a.ty };
+    }
+    return { x: lerp(a.sx, a.tx, p), y: lerp(a.sy, a.ty, p) };
+  };
+  const A = pos('A'), B = pos('B'), C = pos('C'), D = pos('D');
+  strokeWeight(5); strokeCap(ROUND);
+  // 反応前の結合 A-B, C-D （消えていく）
+  stroke(180, 165, 130, (1 - p) * 230);
+  line(A.x, A.y, B.x, B.y); line(C.x, C.y, D.x, D.y);
+  // 反応後の結合 A-C, B-D （あらわれる）
+  stroke(150, 195, 165, p * 245);
+  line(A.x, A.y, C.x, C.y); line(B.x, B.y, D.x, D.y);
+  noStroke();
+
+  // --- 原子（半径を17に正規化して描画） ---
+  for (const el of ['A', 'B', 'C', 'D']) {
+    const a = s5atom(el), pp = pos(el);
+    drawAtom(el, pp.x, pp.y, 255, 17 / ELEM[el].r);
+  }
+
+  // --- 下の一文 ---
+  fill('#2E7D32'); textStyle(BOLD); textAlign(CENTER, BOTTOM); textSize(Math.min(13.5, canvasW * 0.023));
+  text('原子は 組み替わるだけ → 種類も数も 同じ ＝ 質量は変わらない', canvasW / 2, L.counterY - 8);
+  textStyle(NORMAL);
+}
+
+// ============================================================
 // 原子カウンター帯
 // ============================================================
 function countAtoms() {
@@ -1221,6 +1374,10 @@ function drawCounterBand() {
     } else {
       label('（空気中に O₂ がただよっている）', '#9a8a70', false, 10.5);
     }
+  } else if (scene === 5) {
+    label('🔢 原子:', '#8a7a60', true, 11);
+    for (const el of ['A', 'B', 'C', 'D']) chip(el, 1);
+    label('→ 前後で 種類も数も そのまま！＝質量保存', '#4CB780', true, 11.5);
   } else if (scene === 2 && scene2Open) {
     label('🔢 フラスコの中:', '#8a7a60', true, 11);
     chip('Fe', 6);
@@ -1304,6 +1461,9 @@ function drawAtomMini(el, x, y) {
 // UI 制御
 // ============================================================
 function buildSceneUI() {
+  document.getElementById('exp-title').textContent = EXPLAIN[scene].title;
+  document.getElementById('exp-body').innerHTML = EXPLAIN[scene].body;
+  if (scene === 5) return;   // まとめは予想・実験ボタンなし
   const sc = activeConfig();
   document.getElementById('predict-label').textContent = sc.predictLabel;
   const box = document.getElementById('predict-btns');
@@ -1316,8 +1476,6 @@ function buildSceneUI() {
     box.appendChild(b);
   }
   document.getElementById('action-btn').textContent = sc.action;
-  document.getElementById('exp-title').textContent = EXPLAIN[scene].title;
-  document.getElementById('exp-body').innerHTML = EXPLAIN[scene].body;
 }
 
 function selectPrediction(key, btn) {
@@ -1394,7 +1552,7 @@ function showOpenedResult() {
 function resetScene() {
   phase = 'predict';
   prediction = null;
-  animT = 0; openT = 0;
+  animT = 0; openT = 0; s5T = 0;
   sparks = []; bubbles = []; precip = [];
   buildAtoms();
   buildSceneUI();
@@ -1409,6 +1567,16 @@ function resetScene() {
     b.disabled = false; b.classList.remove('selected', 'was-answer');
   });
   document.getElementById('explainer').classList.remove('show');
+
+  // まとめ(scene5)は予想・実験UIを隠し、まとめパネルを出す。原子は常に見せる
+  const s5 = (scene === 5);
+  document.getElementById('lens-box').style.display = s5 ? 'none' : '';
+  document.getElementById('predict-box').style.display = s5 ? 'none' : '';
+  document.getElementById('action-btn').style.display = s5 ? 'none' : '';
+  document.getElementById('explain-btn').style.display = s5 ? 'none' : '';
+  document.getElementById('summary-box').classList.toggle('show', s5);
+  document.getElementById('reset-btn').style.display = s5 ? 'none' : '';
+  if (s5) setView(true);
 }
 
 // ---------- イベント ----------
