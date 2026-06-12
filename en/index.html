@@ -138,7 +138,7 @@ header.title .sub { font-size: 12.5px; color: #8a7a60; font-family: 'Kaisei Deco
 .predict-btns button {
   background: #fff; border: 2px solid #C8BC9A; border-radius: 10px;
   padding: 7px 8px; font-family: inherit; font-weight: 700; font-size: 12.5px;
-  cursor: pointer; color: var(--ink); text-align: center;
+  cursor: pointer; color: var(--ink); text-align: center; text-wrap: balance;
   transition: transform 0.08s;
 }
 .predict-btns button:hover:not(:disabled) { transform: translateY(-1px); border-color: var(--accent); }
@@ -151,7 +151,7 @@ header.title .sub { font-size: 12.5px; color: #8a7a60; font-family: 'Kaisei Deco
   background: #fff; border: 2px solid var(--ink); border-radius: 999px;
   padding: 9px 12px; font-family: inherit; font-weight: 800; font-size: 13.5px;
   cursor: pointer; color: var(--ink); box-shadow: 2px 2px 0 var(--ink);
-  transition: transform 0.08s, box-shadow 0.08s; width: 100%;
+  transition: transform 0.08s, box-shadow 0.08s; width: 100%; text-wrap: balance;
 }
 .btn:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow: 3px 3px 0 var(--ink); }
 .btn:active:not(:disabled) { transform: translate(1px,1px); box-shadow: 1px 1px 0 var(--ink); }
@@ -367,9 +367,9 @@ const PREDICT_MASS = [
   { key: 'down', label: '⬇ Decreases' },
 ];
 const PREDICT_TILT = [
-  { key: 'right', label: '↘ Right (burned) side drops' },
+  { key: 'right', label: '↘ Burned side drops' },
   { key: 'same',  label: '⚖ Stays balanced' },
-  { key: 'left',  label: '↙ Left (unburned) side drops' },
+  { key: 'left',  label: '↙ Unburned side drops' },
 ];
 
 const SCENES = {
@@ -1527,7 +1527,7 @@ function finishReaction() {
   }
   if (scene === 2) {
     const fb = document.getElementById('flask-btn');
-    fb.textContent = scene2Open ? '🔒 Back to the sealed version' : '🔓 Open the lid & ignite';
+    fb.textContent = scene2Open ? '🔒 Back to sealed' : '🔓 Open the lid & ignite';
     fb.classList.remove('hidden');
     fb.disabled = false;
   }
