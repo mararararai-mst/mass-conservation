@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>質量保存の法則ラボ｜中2理科</title>
-<meta property="og:title" content="質量保存の法則ラボ">
-<meta property="og:description" content="中2「化学変化と物質の質量」。燃焼・沈殿・気体発生の4実験を、粒子の見える化スイッチで実体的に学ぶシミュレーション教材。">
+<title>Conservation of Mass Lab｜Grade 8 Science</title>
+<meta property="og:title" content="Conservation of Mass Lab">
+<meta property="og:description" content="Grade 8 'Chemical Change & the Mass of Substances'. Learn through 4 experiments — combustion, precipitation, and gas production — with a switch that reveals the invisible particles.">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -225,36 +225,36 @@ footer a { color: var(--accent2); }
 <body>
 <div class="wrap">
   <header class="title">
-    <h1>⚖️ 質量保存の法則ラボ</h1>
-    <span class="sub">中2理科〈化学変化と物質の質量〉</span>
+    <h1>⚖️ Conservation of Mass Lab</h1>
+    <span class="sub">Grade 8 Science · Chemical Change & the Mass of Substances</span>
   </header>
 
   <div class="scene-tabs">
     <button class="scene-tab active" data-scene="1">
       <span class="num">1</span>
-      <span class="tx"><span class="t1">🔥 空気中でもやす</span><span class="t2">てんびんは かたむく？</span></span>
+      <span class="tx"><span class="t1">🔥 Burn in open air</span><span class="t2">Will the balance tip?</span></span>
     </button>
     <button class="scene-tab" data-scene="2">
       <span class="num">2</span>
-      <span class="tx"><span class="t1">🫙 とじこめてもやす</span><span class="t2">密閉フラスコの中で…</span></span>
+      <span class="tx"><span class="t1">🫙 Burn it sealed</span><span class="t2">Inside a closed flask…</span></span>
     </button>
     <button class="scene-tab" data-scene="3">
       <span class="num">3</span>
-      <span class="tx"><span class="t1">🥛 まぜると白い沈殿</span><span class="t2">硫酸＋水酸化バリウム</span></span>
+      <span class="tx"><span class="t1">🥛 Mix → white precipitate</span><span class="t2">sulfuric acid + barium hydroxide</span></span>
     </button>
     <button class="scene-tab" data-scene="4">
       <span class="num">4</span>
-      <span class="tx"><span class="t1">🫧 あわが出る反応</span><span class="t2">密閉ビン → ふたをあけると？</span></span>
+      <span class="tx"><span class="t1">🫧 A reaction that fizzes</span><span class="t2">Sealed jar → open the lid?</span></span>
     </button>
     <button class="scene-tab tab-summary" data-scene="5">
       <span class="num">📜</span>
-      <span class="tx"><span class="t1">まとめ</span><span class="t2">質量保存の法則とは？</span></span>
+      <span class="tx"><span class="t1">Summary</span><span class="t2">What is the Law of Conservation of Mass?</span></span>
     </button>
   </div>
 
   <div class="main-row">
     <div class="stage">
-      <button class="explain-btn" id="explain-btn">💡 かいせつ</button>
+      <button class="explain-btn" id="explain-btn">💡 Explanation</button>
       <div class="overlay-explainer" id="explainer">
         <button class="close-btn" id="explain-close">✕</button>
         <h3 id="exp-title"></h3>
@@ -265,23 +265,23 @@ footer a { color: var(--accent2); }
 
     <aside class="ctrl-col">
       <div class="ctrl-box" id="lens-box">
-        <div class="label">りかのメガネ 👓</div>
+        <div class="label">Science Lens 👓</div>
         <div class="particle-switch">
-          <button id="view-eye" class="active">👀 見た目</button>
-          <button id="view-particle">🔬 粒子</button>
+          <button id="view-eye" class="active">👀 Look</button>
+          <button id="view-particle">🔬 Particles</button>
         </div>
-        <div class="switch-hint" id="switch-hint">スイッチひとつで<br>見えない粒子が見える！</div>
+        <div class="switch-hint" id="switch-hint">One switch reveals<br>the invisible particles!</div>
       </div>
 
       <div class="ctrl-box" id="predict-box">
-        <div class="label" id="predict-label">Q. 質量はどうなる？</div>
+        <div class="label" id="predict-label">Q. What happens to the mass?</div>
         <div class="predict-btns" id="predict-btns"></div>
       </div>
 
-      <button class="btn primary" id="action-btn" disabled>🔥 実験スタート</button>
-      <button class="btn lid hidden" id="lid-btn">🫳 ふたをあける</button>
-      <button class="btn lid hidden" id="flask-btn">🔓 ふたを開けて点火する</button>
-      <button class="btn ghost" id="reset-btn">↩ もう一度</button>
+      <button class="btn primary" id="action-btn" disabled>🔥 Start experiment</button>
+      <button class="btn lid hidden" id="lid-btn">🫳 Open the lid</button>
+      <button class="btn lid hidden" id="flask-btn">🔓 Open the lid & ignite</button>
+      <button class="btn ghost" id="reset-btn">↩ Again</button>
 
       <div class="result-box" id="result-box">
         <div class="verdict" id="result-verdict"></div>
@@ -291,29 +291,29 @@ footer a { color: var(--accent2); }
 
       <div class="summary-box" id="summary-box">
         <div class="sm-why">
-          <div class="sm-head">なぜ変わらない？</div>
-          <p><b>①</b> 原子は 新しくできたり・なくなったり <b>しない</b></p>
-          <p><b>②</b> 反応の前後で 原子の<b>種類と数は同じ</b></p>
-          <p class="sm-punch">→ 化学反応は 原子の<b>組み合わせ</b>を変えるだけ！</p>
+          <div class="sm-head">Why no change?</div>
+          <p><b>①</b> Atoms are <b>never created or destroyed</b></p>
+          <p><b>②</b> The <b>kinds and numbers of atoms are the same</b> before and after</p>
+          <p class="sm-punch">→ A chemical reaction only changes how atoms <b>combine</b>!</p>
         </div>
         <div class="sm-ex">
-          <div class="sm-head">計算の例</div>
-          硫酸 <b>10g</b> ＋ 水酸化バリウム水溶液 <b>17g</b><br>
-          → 硫酸バリウム <b>23g</b> ＋ 水 <b>4g</b><br>
-          <span class="sm-eq">前 27g ＝ 後 27g</span>
+          <div class="sm-head">Example calculation</div>
+          sulfuric acid <b>10 g</b> + barium hydroxide solution <b>17 g</b><br>
+          → barium sulfate <b>23 g</b> + water <b>4 g</b><br>
+          <span class="sm-eq">Before 27 g = After 27 g</span>
         </div>
         <div class="sm-cases">
-          <div class="sm-head">4つの実験の早見</div>
-          <p><span class="b-up">⬆増</span> 開放でもやす → 酸素が<b>入る</b></p>
-          <p><span class="b-same">➡変</span> 密閉 → 出入り<b>なし</b></p>
-          <p><span class="b-down">⬇減</span> 開放で気体発生 → 気体が<b>出る</b></p>
-          <p class="sm-note">どれも原子は組み替わるだけ。境界（空気）を出入りした分だけ 見かけが変わる。</p>
+          <div class="sm-head">Quick recap of the 4 experiments</div>
+          <p><span class="b-up">⬆ Up</span> burn in open air → oxygen <b>enters</b></p>
+          <p><span class="b-same">➡ Same</span> sealed → <b>nothing</b> in or out</p>
+          <p><span class="b-down">⬇ Down</span> open + gas forms → gas <b>leaves</b></p>
+          <p class="sm-note">In every case atoms just rearrange. Only what crosses the boundary (the air) changes the reading.</p>
         </div>
       </div>
     </aside>
   </div>
 
-  <footer>つぎは <a href="practice.html">📝 れんしゅう問題</a> にチャレンジ！　原子は うまれない・きえない・つくりかえられるだけ。</footer>
+  <footer>Next, try the <a href="practice.html">📝 Practice Problems</a>!  Atoms are never created or destroyed — only rearranged.</footer>
 </div>
 
 <script>
@@ -361,59 +361,59 @@ const ELEM = {
 
 // ---------- シーン定義 ----------
 const PREDICT_MASS = [
-  { key: 'up',   label: '⬆ 大きくなる' },
-  { key: 'same', label: '➡ 変わらない' },
-  { key: 'down', label: '⬇ 小さくなる' },
+  { key: 'up',   label: '⬆ Increases' },
+  { key: 'same', label: '➡ Stays the same' },
+  { key: 'down', label: '⬇ Decreases' },
 ];
 const PREDICT_TILT = [
-  { key: 'right', label: '↘ 右（もやした方）が下がる' },
-  { key: 'same',  label: '⚖ つり合ったまま' },
-  { key: 'left',  label: '↙ 左（そのまま）が下がる' },
+  { key: 'right', label: '↘ Right (burned) side drops' },
+  { key: 'same',  label: '⚖ Stays balanced' },
+  { key: 'left',  label: '↙ Left (unburned) side drops' },
 ];
 
 const SCENES = {
   1: {
-    predictLabel: 'Q. てんびんはどうなる？',
+    predictLabel: 'Q. What will the balance do?',
     options: PREDICT_TILT,
     answer: 'right',
-    action: '🔥 右だけ もやす',
-    resultFact: 'もやした方が下がった！<br>（くっついた酸素のぶん 質量がふえた）',
-    nextHint: '🔬 粒子スイッチで「ふえた質量の正体」を見てみよう → つぎはシーン2「とじこめてもやす」へ！',
+    action: '🔥 Burn only the right',
+    resultFact: 'The burned side dropped!<br>(the bonded oxygen added mass)',
+    nextHint: '🔬 Use the Particles switch to see the true source of the added mass → next, go to Scene 2 "Burn it sealed"!',
   },
   2: {
-    predictLabel: 'Q. 質量はどうなる？',
+    predictLabel: 'Q. What happens to the mass?',
     options: PREDICT_MASS,
     answer: 'same',
-    action: '🔥 点火する',
-    resultFact: '85.32 g → 85.32 g<br>同じ「もえる」なのに変わらない！？',
-    nextHint: '🔬 粒子で見ると…酸素はフラスコの中にいた！ 出入りがなければ質量は変わらない＝<b>質量保存の法則</b>',
+    action: '🔥 Ignite',
+    resultFact: '85.32 g → 85.32 g<br>It burns just the same, yet no change!?',
+    nextHint: '🔬 With particles on… the oxygen was inside the flask all along! If nothing crosses the boundary, the mass does not change = the <b>Law of Conservation of Mass</b>',
   },
   3: {
-    predictLabel: 'Q. 質量はどうなる？',
+    predictLabel: 'Q. What happens to the mass?',
     options: PREDICT_MASS,
     answer: 'same',
-    action: '🥛 まぜる',
-    resultFact: '127.45 g → 127.45 g<br>白い沈殿ができても変わらない！',
-    nextHint: '🔬 粒子で見ると…原子の「組み合わせ」が変わっただけ。原子の種類と数はそのまま！',
+    action: '🥛 Mix',
+    resultFact: '127.45 g → 127.45 g<br>Even with a white precipitate, no change!',
+    nextHint: '🔬 With particles on… only the combination of atoms changed. The kinds and numbers of atoms stay the same!',
   },
   4: {
-    predictLabel: 'Q. 質量はどうなる？',
+    predictLabel: 'Q. What happens to the mass?',
     options: PREDICT_MASS,
     answer: 'same',
-    action: '🫙 かたむけて まぜる',
-    resultFact: '58.00 g → 58.00 g<br>あわ（CO₂）が出ても、とじこめていれば変わらない！',
-    nextHint: 'では…「ふたをあける」と どうなる？ よそうしてからボタンを押そう！',
+    action: '🫙 Tilt to mix',
+    resultFact: '58.00 g → 58.00 g<br>Even when bubbles (CO₂) form, if it stays sealed there is no change!',
+    nextHint: 'So… what happens if you open the lid? Make your prediction, then press the button!',
   },
 };
 
 // シーン2の「ふたを開けて点火」バージョン（①と同じ＝酸素が外から入ってふえる）
 const SCENE2_OPEN = {
-  predictLabel: 'Q. ふたを開けて点火すると？',
+  predictLabel: 'Q. If you ignite with the lid open?',
   options: PREDICT_MASS,
   answer: 'up',
-  action: '🔥 ふたを開けて 点火',
-  resultFact: '84.00 g → 84.80 g<br>ふえた！外から酸素が入ったぶん 重くなった（①と同じ！）',
-  nextHint: '💡 同じフラスコ・同じ反応でも、<b>ふたを開けると変わる</b>。質量保存は「物質の出入りがない」ときの話！🔒ボタンで密閉版と見くらべよう。',
+  action: '🔥 Open lid & ignite',
+  resultFact: '84.00 g → 84.80 g<br>It increased! Oxygen came in from outside, so it got heavier (same as #1!)',
+  nextHint: '💡 Same flask, same reaction, yet <b>opening the lid changes it</b>. Conservation of mass is about when no substance crosses the boundary! Use the 🔒 button to compare with the sealed version.',
 };
 
 // いま参照すべき設定（シーン2だけ密閉/開放の2モードを持つ）
@@ -423,43 +423,43 @@ function activeConfig() {
 
 const EXPLAIN = {
   1: {
-    title: '🔥 もやすと重くなるナゾ',
-    body: `<p>スチールウール（鉄）をもやすと、空気中の<b>酸素</b>が鉄に<b>結びつく</b>。</p>
-      <div class="rx">鉄 ＋ 酸素 → 酸化鉄</div>
-      <p>酸素は目に見えないけれど、ちゃんと<b>質量がある</b>。だから結びついた酸素のぶんだけ重くなる！</p>
-      <div class="keybox">📌 銅を空気中で加熱しても同じ。<br>銅 ＋ 酸素 → 酸化銅（質量は大きくなる）</div>
-      <p>🔬スイッチで、空気中の酸素分子 O₂ が飛びこんでくる様子を見てみよう。</p>`,
+    title: '🔥 The mystery: burning makes it heavier',
+    body: `<p>When you burn steel wool (iron), <b>oxygen</b> in the air <b>bonds</b> to the iron.</p>
+      <div class="rx">iron + oxygen → iron oxide</div>
+      <p>Oxygen is invisible, but it really does <b>have mass</b>. So it gets heavier by exactly the amount of oxygen that bonded!</p>
+      <div class="keybox">📌 Heating copper in open air works the same way.<br>copper + oxygen → copper oxide (the mass increases)</div>
+      <p>Use the 🔬 switch to watch the oxygen molecules O₂ in the air come flying in.</p>`,
   },
   2: {
-    title: '🫙 質量保存の法則',
-    body: `<p>フラスコに<b>ふたをして</b>もやすと、使われる酸素も<b>ぜんぶ容器の中</b>。外から何も入らず、外へ何も出ていかない。</p>
-      <div class="keybox">⚖️ <b>質量保存の法則</b><br>化学変化の前と後で、物質ぜんたいの質量は変わらない。</div>
-      <p>理由はシンプル。化学変化では原子が<b>新しくできたり、なくなったりしない</b>から。</p>
-      <p>原子の<b>組み合わせ</b>が変わるだけで、原子の<b>種類と数</b>は変わらない。だから質量も変わらない！</p>
-      <div class="keybox">🔓 「ふたを開けて点火」すると…外から酸素が入って<b>重くなる</b>（①と同じ）。質量保存は<b>物質の出入りがない</b>ときの話、と確かめよう。</div>`,
+    title: '🫙 The Law of Conservation of Mass',
+    body: `<p>When you burn it with the flask <b>sealed</b>, all the oxygen used is <b>inside the container</b>. Nothing comes in from outside, and nothing goes out.</p>
+      <div class="keybox">⚖️ <b>Law of Conservation of Mass</b><br>The total mass of substances is the same before and after a chemical change.</div>
+      <p>The reason is simple. In a chemical change, atoms are <b>never created or destroyed</b>.</p>
+      <p>Only the <b>combination</b> of atoms changes — the <b>kinds and numbers</b> of atoms stay the same. So the mass does not change either!</p>
+      <div class="keybox">🔓 If you "open the lid & ignite"… oxygen comes in from outside and it <b>gets heavier</b> (same as #1). Confirm that conservation of mass is about when <b>no substance crosses the boundary</b>.</div>`,
   },
   3: {
-    title: '🥛 白い沈殿ができても…',
-    body: `<p>うすい硫酸に水酸化バリウム水溶液を混ぜると、白い沈殿（硫酸バリウム）ができる。</p>
+    title: '🥛 Even when a white precipitate forms…',
+    body: `<p>When you mix barium hydroxide solution into dilute sulfuric acid, a white precipitate (barium sulfate) forms.</p>
       <div class="rx">H₂SO₄ ＋ Ba(OH)₂ → BaSO₄ ＋ 2H₂O</div>
-      <p>見た目は大変化！でも🔬で見ると、原子が<b>ならびかえられただけ</b>。</p>
-      <div class="keybox">📌 たとえば 硫酸10g ＋ 水酸化バリウム水溶液17g なら、反応後も合計は<b>27g</b>のまま！</div>
-      <p>気体が出ない反応なら、ふたをしなくても質量は変わらない。</p>`,
+      <p>It looks like a huge change! But with 🔬, you can see the atoms were <b>just rearranged</b>.</p>
+      <div class="keybox">📌 For example, sulfuric acid 10 g + barium hydroxide solution 17 g — after the reaction the total is still <b>27 g</b>!</div>
+      <p>For a reaction that produces no gas, the mass does not change even without a lid.</p>`,
   },
   4: {
-    title: '🫧 へったのは「消えた」んじゃない',
-    body: `<p>炭酸水素ナトリウムに塩酸を加えると二酸化炭素が発生する。</p>
+    title: '🫧 The decrease is not "disappearing"',
+    body: `<p>Adding hydrochloric acid to sodium bicarbonate produces carbon dioxide.</p>
       <div class="rx">NaHCO₃ ＋ HCl → NaCl ＋ H₂O ＋ CO₂</div>
-      <p><b>密閉ビンの中</b>なら、CO₂も中にいるので質量は変わらない。</p>
-      <p>ふたをあけると CO₂ が空気中へ<b>にげていく</b>ので、そのぶん軽くなる。</p>
-      <div class="keybox">📌 ビーカー（ふたなし）で混ぜたときに軽くなるのも同じ理由！<br>へった質量 ＝ にげた CO₂ の質量</div>
-      <p>原子は消えていない。<b>にげたぶんまで合わせれば、質量はぴったり保存</b>されている！</p>`,
+      <p><b>Inside a sealed jar</b>, the CO₂ stays inside, so the mass does not change.</p>
+      <p>When you open the lid, the CO₂ <b>escapes</b> into the air, so it gets lighter by that amount.</p>
+      <div class="keybox">📌 It gets lighter for the same reason when you mix in an open beaker (no lid)!<br>mass lost = mass of the CO₂ that escaped</div>
+      <p>The atoms did not disappear. <b>Add back what escaped, and the mass is perfectly conserved</b>!</p>`,
   },
   5: {
-    title: '📜 質量保存の法則とは？',
-    body: `<p><b>化学変化の前と後で、物質ぜんたいの質量は変わらない。</b>これを質量保存の法則という。</p>
+    title: '📜 What is the Law of Conservation of Mass?',
+    body: `<p><b>The total mass of substances is the same before and after a chemical change.</b> This is called the Law of Conservation of Mass.</p>
       <div class="rx">A−B ＋ C−D → A−C ＋ B−D</div>
-      <p>反応で起きるのは原子の<b>組み替え</b>だけ。原子は新しくできたり、なくなったりしない。種類も数も同じ。だから質量も変わらない。</p>`,
+      <p>All that happens in a reaction is the <b>rearrangement</b> of atoms. Atoms are never created or destroyed. Same kinds, same numbers. So the mass does not change.</p>`,
   },
 };
 
@@ -870,15 +870,15 @@ function drawResultBanner() {
   rectMode(CORNER); textStyle(NORMAL);
 }
 function bannerMsg() {
-  if (scene === 1) return { text: '⚖️ もやした方が 下がった！', col: '#D97A4B' };
+  if (scene === 1) return { text: '⚖️ The burned side dropped!', col: '#D97A4B' };
   if (scene === 2) {
-    if (scene2Open) return { text: '🔥 ふえた！ 84.00 g → 84.80 g', col: '#D97A4B' };
-    return { text: '✨ 変わらない！ 85.32 g → 85.32 g', col: '#4CB780' };
+    if (scene2Open) return { text: '🔥 It increased! 84.00 g → 84.80 g', col: '#D97A4B' };
+    return { text: '✨ No change! 85.32 g → 85.32 g', col: '#4CB780' };
   }
-  if (scene === 3) return { text: '✨ 変わらない！ 127.45 g → 127.45 g', col: '#4CB780' };
+  if (scene === 3) return { text: '✨ No change! 127.45 g → 127.45 g', col: '#4CB780' };
   if (scene === 4) {
-    if (phase === 'opened') return { text: '😲 へった！ 58.00 g → 57.40 g', col: '#E8849C' };
-    return { text: '✨ 変わらない！ 58.00 g → 58.00 g（密閉中）', col: '#4CB780' };
+    if (phase === 'opened') return { text: '😲 It decreased! 58.00 g → 57.40 g', col: '#E8849C' };
+    return { text: '✨ No change! 58.00 g → 58.00 g (while sealed)', col: '#4CB780' };
   }
   return null;
 }
@@ -923,18 +923,18 @@ function drawScene1() {
 
   // ラベル（粒子と重ならないよう、皿のじゅうぶん下に）
   noStroke(); fill('#8a7a60'); textAlign(CENTER, TOP); textSize(12);
-  text('スチールウール（鉄）', L.pivot.x - L.armLen, L.pivot.y + 92 - t * L.armLen * 0.09);
-  text(phase === 'predict' || phase === 'ready' ? 'こちらを もやす よ' : 'もやした（酸化鉄）', L.pivot.x + L.armLen, L.pivot.y + 92 + t * L.armLen * 0.09);
+  text('Steel wool (iron)', L.pivot.x - L.armLen, L.pivot.y + 92 - t * L.armLen * 0.09);
+  text(phase === 'predict' || phase === 'ready' ? 'Burn this one' : 'Burned (iron oxide)', L.pivot.x + L.armLen, L.pivot.y + 92 + t * L.armLen * 0.09);
 
   // 火の粉
   updateSparks();
 
   // 粒子モード: 空気中のO2 → 鉄へ
   if (particleView) {
-    if (phase !== 'done') drawAirLabel(canvasW * 0.33, L.pivot.y + 22, '空気中の酸素 O₂');
+    if (phase !== 'done') drawAirLabel(canvasW * 0.33, L.pivot.y + 22, 'Oxygen O₂ in the air');
     drawAtoms();
   } else if (phase === 'predict' || phase === 'ready') {
-    hintGhost('🔬にすると「空気の正体」が見えるよ');
+    hintGhost('Switch to 🔬 to reveal what the air is really made of');
   }
 }
 
@@ -1039,15 +1039,15 @@ function drawScene2() {
     // 「ふたを開けてある」は結果バナーと重なるので予想中だけ表示
     if (phase === 'predict' || phase === 'ready') {
       fill('#D97A4B'); textStyle(BOLD);
-      text('↑ ふたを開けてある', F.x + 26, neckTop - 4);
+      text('↑ Lid is open', F.x + 26, neckTop - 4);
       textStyle(NORMAL); fill('#8a7a60');
     }
   } else {
-    text('← ゴム栓で 密閉！', F.x + 30, F.y - F.r - 44);
+    text('← Sealed with a rubber stopper', F.x + 30, F.y - F.r - 44);
   }
   if (!particleView) {
     textAlign(LEFT, CENTER);
-    text('スチールウール\n（鉄）＋ 酸素', F.x + F.r + 18, F.y + 8);
+    text('Steel wool\n(iron) + oxygen', F.x + F.r + 18, F.y + 8);
   }
 
   // 粒子モード
@@ -1062,15 +1062,15 @@ function drawScene2() {
     noStroke(); textSize(11.5); textStyle(BOLD); textAlign(CENTER, TOP);
     if (scene2Open) {
       fill('#D97A4B');
-      const msg = (phase === 'done') ? '酸素が結びついて ふえた！' : '↓ 酸素が 口から入る';
+      const msg = (phase === 'done') ? 'Oxygen bonded → it increased!' : '↓ Oxygen enters from the top';
       text(msg, F.x, F.y - F.r + 10);
     } else {
       fill('#4A7BAA');
-      text('酸素もぜんぶ フラスコの中！', F.x, F.y - F.r + 10);
+      text('All the oxygen is inside the flask!', F.x, F.y - F.r + 10);
     }
     textStyle(NORMAL);
   } else if (phase === 'predict' || phase === 'ready') {
-    hintGhost(scene2Open ? '🔬にすると 外の酸素の動きが見えるよ' : '🔬にすると フラスコの中の気体が見えるよ');
+    hintGhost(scene2Open ? 'Switch to 🔬 to see the outside oxygen move' : 'Switch to 🔬 to see the gas inside the flask');
   }
 }
 
@@ -1102,7 +1102,7 @@ function drawScene3() {
     noStroke();
     if (pt > 0.7) {
       fill('#6a5a40'); textSize(11); textStyle(BOLD); textAlign(CENTER, CENTER);
-      text('↓ 白い沈殿（硫酸バリウム）', B.x, B.botY - 46);
+      text('↓ white precipitate (barium sulfate)', B.x, B.botY - 46);
       textStyle(NORMAL);
     }
   }
@@ -1127,19 +1127,19 @@ function drawScene3() {
 
   // ラベル（注ぎ中の小ビーカーと重ならない位置に）
   noStroke(); fill('#8a7a60'); textSize(12); textAlign(CENTER, TOP);
-  text('うすい硫酸', B.x - B.w / 2 + 6, B.topY - 24);
-  text(emptied ? '（注ぎおわった）' : '水酸化バリウム水溶液', S.x + 14, S.y - S.h * 0.5 - 26);
+  text('dilute sulfuric acid', B.x - B.w / 2 + 6, B.topY - 24);
+  text(emptied ? '(poured)' : 'barium hydroxide solution', S.x + 14, S.y - S.h * 0.5 - 26);
 
   // 粒子モード
   if (particleView) {
     drawAtoms();
     if (phase === 'done') {
       fill('#4CB780'); textSize(12); textStyle(BOLD); textAlign(CENTER, CENTER);
-      text('原子の組み合わせが 変わっただけ！', canvasW / 2, L.counterY - 16);
+      text('Only the combination of atoms changed!', canvasW / 2, L.counterY - 16);
       textStyle(NORMAL);
     }
   } else if (phase === 'predict' || phase === 'ready') {
-    hintGhost('🔬にすると 水溶液の中の粒子が見えるよ');
+    hintGhost('Switch to 🔬 to see the particles in the solution');
   }
 }
 
@@ -1196,7 +1196,7 @@ function drawScene4() {
   rectMode(CORNER);
   if (phase === 'opening' && openT < 0.4) {
     noStroke(); fill('#E8849C'); textSize(15); textStyle(BOLD); textAlign(CENTER, CENTER);
-    text('ポンッ！', B.x + 70, Math.max(16, B.topY - 36));
+    text('Pop!', B.x + 70, Math.max(16, B.topY - 36));
     textStyle(NORMAL);
   }
 
@@ -1216,9 +1216,9 @@ function drawScene4() {
   // ラベル（反応前のみ。反応後は中身が変わっているので出さない）
   if (phase === 'predict' || phase === 'ready') {
     noStroke(); fill('#8a7a60'); textSize(12); textAlign(CENTER, TOP);
-    text('炭酸水素ナトリウム', B.x - B.w / 2 - 64, B.botY - 30);
-    text('うすい塩酸', B.x + B.w / 2 + 48, L.vial.y - 38);
-    textSize(11); text('ふたで 密閉した ビン', B.x, B.topY - 34);
+    text('sodium bicarbonate', B.x - B.w / 2 - 64, B.botY - 30);
+    text('dilute hydrochloric acid', B.x + B.w / 2 + 48, L.vial.y - 38);
+    textSize(11); text('jar sealed with a lid', B.x, B.topY - 34);
   }
 
   // 粒子モード
@@ -1226,16 +1226,16 @@ function drawScene4() {
     drawAtoms();
     if ((phase === 'done')) {
       fill('#4A7BAA'); textSize(11.5); textStyle(BOLD); textAlign(CENTER, TOP);
-      text('CO₂ も まだ ビンの中！', B.x, B.gasY - 40);
+      text('CO₂ is still inside the jar!', B.x, B.gasY - 40);
       textStyle(NORMAL);
     }
     if (phase === 'opened') {
       fill('#E8849C'); textSize(11.5); textStyle(BOLD); textAlign(RIGHT, TOP);
-      text('↑ にげた CO₂\n（きえてはいない！）', canvasW - 14, L.counterY * 0.58 + 22);
+      text('↑ CO₂ that escaped\n(not gone!)', canvasW - 14, L.counterY * 0.58 + 22);
       textStyle(NORMAL);
     }
   } else if (phase === 'predict' || phase === 'ready') {
-    hintGhost('🔬にすると 出てくる気体の正体が見えるよ');
+    hintGhost('Switch to 🔬 to reveal the gas that comes out');
   }
 }
 
@@ -1277,16 +1277,16 @@ function drawScene5() {
   // --- 定義（上） ---
   textAlign(CENTER, TOP); noStroke();
   fill('#D97A4B'); textStyle(BOLD); textSize(Math.min(20, canvasW * 0.034));
-  text('⚖️ 質量保存の法則', canvasW / 2, s.defY - 22);
+  text('⚖️ Law of Conservation of Mass', canvasW / 2, s.defY - 22);
   fill('#5a4a35'); textSize(Math.min(13, canvasW * 0.022));
-  text('化学変化の前と後で、物質ぜんたいの質量は変わらない。', canvasW / 2, s.defY + 6);
+  text('The total mass of substances is the same before and after a chemical change.', canvasW / 2, s.defY + 6);
   textStyle(NORMAL);
 
   // --- 反応前 / 反応後 ラベルと矢印 ---
   const topY = Math.min(s.y1, s.y2) - 44;
   fill('#9a8a70'); textSize(12); textStyle(BOLD);
-  text('反応前', s.xL, topY);
-  text('反応後', s.xR, topY);
+  text('Before', s.xL, topY);
+  text('After', s.xR, topY);
   // 矢印
   stroke('#C99A3B'); strokeWeight(3);
   const ay = (s.y1 + s.y2) / 2;
@@ -1324,14 +1324,14 @@ function drawScene5() {
 
   // --- 下の一文 ---
   fill('#2E7D32'); textStyle(BOLD); textAlign(CENTER, BOTTOM); textSize(Math.min(13.5, canvasW * 0.023));
-  text('原子は 組み替わるだけ → 種類も数も 同じ ＝ 質量は変わらない', canvasW / 2, L.counterY - 8);
+  text('Atoms just rearrange → same kinds & numbers = mass does not change', canvasW / 2, L.counterY - 8);
   textStyle(NORMAL);
 
   // まだ再生していないとき：右の空きスペースに「押してね」を点滅表示
   if (s5T === 0 && !s5Playing) {
     const pulse = 150 + 90 * Math.sin(frameCount * 0.08);
     noStroke(); fill(217, 122, 75, pulse); textAlign(CENTER, CENTER); textStyle(BOLD); textSize(Math.min(13, canvasW * 0.022));
-    text('▶ ボタンを押すと\n組み替えが動くよ', (s.arrowX + s.xR) / 2 + 8, ay);
+    text('▶ Press the button\nto watch it move', (s.arrowX + s.xR) / 2 + 8, ay);
     textStyle(NORMAL);
   }
 }
@@ -1362,7 +1362,7 @@ function drawCounterBand() {
   // 見た目モードでは原子情報を見せない（🔬スイッチの価値を立てる導線だけ）
   if (!particleView) {
     fill('#9a8a70'); textSize(11.5); textStyle(BOLD); textAlign(CENTER, CENTER);
-    text('🔬「粒子」スイッチを入れると、原子の種類と数をカウントできるよ！', canvasW / 2, y0 + 26);
+    text('Turn on the 🔬 "Particles" switch to count the kinds and numbers of atoms!', canvasW / 2, y0 + 26);
     textStyle(NORMAL);
     return;
   }
@@ -1373,43 +1373,43 @@ function drawCounterBand() {
   const chip = (el, n, esc = false) => items.push({ k: 'chip', el, n, esc });
 
   if (scene === 1) {
-    label('左の皿:');
+    label('Left pan:');
     chip('Fe', 6);
-    label('もやす皿:');
+    label('Burning pan:');
     chip('Fe', 6);
     if (phase === 'done') {
       chip('O', 6);
-      label('← 空気から O が結びついた！', '#D97A4B', true, 11.5);
+      label('← O joined from the air!', '#D97A4B', true, 11.5);
     } else {
-      label('（空気中に O₂ がただよっている）', '#9a8a70', false, 10.5);
+      label('(O₂ is floating in the air)', '#9a8a70', false, 10.5);
     }
   } else if (scene === 5) {
-    label('🔢 原子:', '#8a7a60', true, 11);
+    label('🔢 Atoms:', '#8a7a60', true, 11);
     for (const el of ['A', 'B', 'C', 'D']) chip(el, 1);
-    label('→ 前後で 種類も数も そのまま！＝質量保存', '#4CB780', true, 11.5);
+    label('→ Same kinds & numbers before & after! = mass conserved', '#4CB780', true, 11.5);
   } else if (scene === 2 && scene2Open) {
-    label('🔢 フラスコの中:', '#8a7a60', true, 11);
+    label('🔢 Inside the flask:', '#8a7a60', true, 11);
     chip('Fe', 6);
     if (phase === 'done') {
       chip('O', 6);
-      label('← 酸素が外から入って ふえた！', '#D97A4B', true, 11.5);
+      label('← Oxygen came in from outside → increased!', '#D97A4B', true, 11.5);
     } else {
-      label('（酸素 O₂ はまだフラスコの外）', '#9a8a70', false, 10.5);
+      label('(O₂ is still outside the flask)', '#9a8a70', false, 10.5);
     }
   } else {
     const { counts, escaped } = countAtoms();
     const order = ['Fe', 'O', 'H', 'S', 'Ba', 'Na', 'C', 'Cl'].filter(e => (counts[e] || escaped[e]));
     const hasEsc = Object.keys(escaped).length > 0;
     if (!hasEsc) {
-      label('🔢 原子:', '#8a7a60', true, 11);
+      label('🔢 Atoms:', '#8a7a60', true, 11);
       for (const el of order) chip(el, counts[el] || 0);
-      if (phase === 'done' || phase === 'opened') label('→ 反応の前後で 種類も数も そのまま！', '#4CB780', true, 12);
+      if (phase === 'done' || phase === 'opened') label('→ Same kinds and numbers before & after!', '#4CB780', true, 12);
     } else {
-      label('ビンの中:');
+      label('In the jar:');
       for (const el of order) if (counts[el]) chip(el, counts[el]);
-      label('にげた:', '#E8849C');
+      label('Escaped:', '#E8849C');
       for (const el of ['C', 'O']) if (escaped[el]) chip(el, escaped[el], true);
-      label('合計はへってない！＝質量保存', '#4CB780', true, 11.5);
+      label('Total unchanged = mass conserved', '#4CB780', true, 11.5);
     }
   }
 
@@ -1510,7 +1510,7 @@ function finishReaction() {
   const hit = (prediction === sc.answer);
   const rb = document.getElementById('result-box');
   const v = document.getElementById('result-verdict');
-  v.textContent = hit ? '🎯 よそう的中！' : '😲 よそうと ちがった！';
+  v.textContent = hit ? '🎯 You predicted it!' : '😲 Not what you predicted!';
   v.className = 'verdict ' + (hit ? 'hit' : 'miss');
   document.getElementById('result-fact').innerHTML = sc.resultFact;
   rb.classList.add('show');
@@ -1526,7 +1526,7 @@ function finishReaction() {
   }
   if (scene === 2) {
     const fb = document.getElementById('flask-btn');
-    fb.textContent = scene2Open ? '🔒 ふたを閉じた実験にもどる' : '🔓 ふたを開けて点火する';
+    fb.textContent = scene2Open ? '🔒 Back to the sealed version' : '🔓 Open the lid & ignite';
     fb.classList.remove('hidden');
     fb.disabled = false;
   }
@@ -1548,13 +1548,13 @@ function openLid() {
 
 function showOpenedResult() {
   const rb = document.getElementById('result-box');
-  document.getElementById('result-verdict').textContent = '🫧 CO₂ が にげた！';
+  document.getElementById('result-verdict').textContent = '🫧 CO₂ escaped!';
   document.getElementById('result-verdict').className = 'verdict miss';
   document.getElementById('result-fact').innerHTML =
-    '58.00 g → 57.40 g（−0.60 g）<br>へったぶん ＝ にげた CO₂ の質量！<br>ビーカー（ふたなし）で混ぜると最初から軽くなっていくのも同じ理由。';
+    '58.00 g → 57.40 g (−0.60 g)<br>The amount lost = the mass of the CO₂ that escaped!<br>It gets lighter from the start when you mix in an open beaker (no lid) for the same reason.';
   rb.classList.add('show');
   const nh = document.getElementById('next-hint');
-  nh.innerHTML = '🔬 粒子で見ると…にげた CO₂ も <b>消えてはいない</b>。合わせれば質量はぴったり保存！　💡かいせつ も読んでみよう';
+  nh.innerHTML = '🔬 With particles on… the CO₂ that escaped is <b>not gone</b>. Add it back and the mass is perfectly conserved! Try reading the 💡 Explanation too';
   nh.classList.add('show');
 }
 
@@ -1587,7 +1587,7 @@ function resetScene() {
   if (s5) {
     s5T = 0; s5Playing = false;
     const aBtn = document.getElementById('action-btn');
-    aBtn.disabled = false; aBtn.textContent = '▶ 組み替えを見る';
+    aBtn.disabled = false; aBtn.textContent = '▶ Watch it rearrange';
     setView(true);
   }
 }
@@ -1616,8 +1616,8 @@ function setView(p) {
   document.getElementById('view-eye').classList.toggle('active', !p);
   document.getElementById('view-particle').classList.toggle('active', p);
   document.getElementById('switch-hint').innerHTML = p
-    ? '原子は うまれない・きえない。<br><b>組み合わせ</b>が変わるだけ！'
-    : 'スイッチひとつで<br>見えない粒子が見える！';
+    ? 'Atoms are never created or destroyed.<br>Only the <b>combination</b> changes!'
+    : 'One switch reveals<br>the invisible particles!';
 }
 
 document.getElementById('explain-btn').addEventListener('click', () => {
